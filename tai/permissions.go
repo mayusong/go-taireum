@@ -57,13 +57,13 @@ func getP2pPermissionedNodes() []string {
 }
 
 func parseP2pPermissionedNodes() []*discv5.Node {
-	//resp, err := http.Get(EnodeUrlConfig)
-	//if err != nil {
-	//	log.Error("CCC Network is unavailable", "err", err)
-	//	return nil
-	//}
-	//defer resp.Body.Close()
-	body, err := ioutil.ReadFile("permissin.json")
+	resp, err := http.Get(EnodeUrlConfig)
+	if err != nil {
+		log.Error("CCC Network is unavailable", "err", err)
+		return nil
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Error("CCC Failed to load nodes", "err", err)
 		return nil

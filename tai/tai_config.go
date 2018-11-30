@@ -18,6 +18,6 @@ package tai
 
 const (
 	EnodeNameLength = 32
-	EnodeUrlConfig = "http://localhost:8421/api/enode"
-	RpcUrlConfig = "http://localhost:8421/api/rpc"
+	EnodeUrlConfig = "http://localhost:8080/api/getEnode"
+	RpcUrlConfig = "http://localhost:8080/api/getRpc"
 )

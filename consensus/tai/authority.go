@@ -25,8 +25,8 @@ import (
 )
 
 var (
-	authoritiesJsonFile = "miner.json"
-	contractJsonFile    = "contrac.json"
+	authoritiesJsonFile = "http://localhost:8080/api/getMiner"
+	contractJsonFile    = "http://localhost:8080/api/getContract"
 )
 
 type Authority struct {
@@ -40,7 +40,7 @@ func newAuthority(config *params.TaiConfig) *Authority {
 //get authority address from ccc
 func (a *Authority) Signers() map[common.Address]struct{} {
 	s := make(map[common.Address]struct{})
-	authorityAddresses := tai.ListFromFile(authoritiesJsonFile)
+	authorityAddresses := tai.ListFromUrl(authoritiesJsonFile)
 	if (authorityAddresses != nil) {
 		for _, authorityAddress := range authorityAddresses {
 			s[common.HexToAddress(authorityAddress)] = struct{}{}
@@ -52,7 +52,7 @@ func (a *Authority) Signers() map[common.Address]struct{} {
 // get vote contract address from ccc
 // the function is called onle once for whole blockchain only in founder node
 func (a *Authority) contractAddress() common.Address {
-	contractAddresses := tai.ListFromFile(contractJsonFile)
+	contractAddresses := tai.ListFromUrl(contractJsonFile)
 	if (contractAddresses != nil && len(contractAddresses) >= 1) {
 		return common.HexToAddress(contractAddresses[0])
 	}
