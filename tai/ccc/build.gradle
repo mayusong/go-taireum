@@ -27,7 +27,11 @@ repositories {
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-devtools")
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
-
+    implementation ('org.web3j:core:4.0.0')
+    implementation 'com.alibaba:fastjson:1.2.54'
+    implementation group: 'org.apache.commons', name: 'commons-exec', version: '1.3'
 
 }
