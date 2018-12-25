@@ -6,6 +6,7 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DaemonExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,9 +20,12 @@ import java.util.Collection;
 
 @RestController
 public class ChainController {
+
+    @Autowired
+    private RpcConfig mRpcConfig;
+
     private String mDataDir = "tai_data_dir";
     private DaemonExecutor mDaemonExecutor = null;
-
     @RequestMapping(value="/api/chain/addGenesis", method = RequestMethod.POST)
     public String addGenesis(@RequestBody String payload) {
 
@@ -115,14 +119,24 @@ public class ChainController {
         } else {
             isStartMine = false;
         }
-        String networkid = "40602";
         String port = "30305";
+        String rpcPort = "8555";
+        if (map.containsKey("port")) {
+            port = map.get("port").toString();
+        }
+        if (map.containsKey("rpcPort")) {
+            rpcPort = map.get("rpcPort").toString();
+        }
+        mRpcConfig.setRpcPort(rpcPort);
+        mRpcConfig.setRpcAddr("127.0.0.1");
+
+        String networkid = "40602";
         String rpcapi = "\"db,debug,eth,net,web3,personal,shh,txpool,web3,admin\"";
-        String rpcport = "8555";
+
         System.out.println(unlockAccount + " " + password);
 
         String startCmds = "geth --datadir " + mDataDir + " --nodiscover --networkid " + networkid + " --port "
-                + port + " --rpc --rpccorsdomain \"*\" --rpcapi " + rpcapi + " --rpcport " + rpcport + " ";
+                + port + " --rpc --rpccorsdomain \"*\" --rpcapi " + rpcapi + " --rpcport " + rpcPort + " ";
         if (isStartMine) {
             startCmds += " --mine --unlock " + unlockAccount + " --password startTaiPassword --etherbase " + unlockAccount + " --verbosity 0";
         } else {

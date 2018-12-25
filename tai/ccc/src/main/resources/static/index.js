@@ -1,5 +1,8 @@
 var Main = {
     methods: {
+        get_host:function( ){
+            return location.protocol + "//" + location.host + "/";
+        },
         handleClick: function (row) {
             console.log(row);
         },
@@ -19,136 +22,155 @@ var Main = {
             this.updateTableData()
         },
         NewAccount: function () {
-            var url = "http://localhost:8080/api/chain/newAccount";
+            var url = this.get_host() + "/api/chain/newAccount";
             var postData = {"password": this.NewAccountPassword};
 
             this.$http.post(url, JSON.stringify(postData)).then(response => {
                 console.log(response.body);
                 this.NewAccountResult = response.body;
-            }, response => {
+            }, err => {
 
             });
         },
         initTai: function () {
-            var url = "http://localhost:8080/api/chain/initTai";
+            var url = this.get_host() + "/api/chain/initTai";
             this.$http.get(url).then(response => {
                 console.log(response.body);
                 this.initTaiResult = response.body;
-            }, response => {
+            }, err => {
 
             });
         },
         addGenesisJson: function () {
-            var url = "http://localhost:8080/api/chain/addGenesis";
+            var url = this.get_host() + "/api/chain/addGenesis";
             this.$http.post(url, this.genesisJson).then(response => {
                 console.log(response.body);
                 this.genesisJsonResult = response.body;
-            }, response => {
+            }, err => {
 
             })
         },
         delGenesisJson: function () {
-            var url = "http://localhost:8080/api/chain/delGenesis";
+            var url = this.get_host() + "/api/chain/delGenesis";
             this.$http.get(url).then(response => {
                 console.log(response.body);
                 this.genesisJsonResult = response.body;
-            }, response => {
+            }, err => {
 
             });
         },
         startTai: function () {
-            if (this.unlockAccount === "" || this.unlockAccountPassword === "") {
-                alert("账户地址和密码不能为空");
+            if (this.unlockAccount === "" || this.unlockAccountPassword === ""
+                ||this.port === "" || this.rpcPort === "") {
+                alert("账户地址和密码, port, rpcport不能为空");
                 return;
             }
-            var url = "http://localhost:8080/api/chain/startTai";
+            var url = this.get_host() + "/api/chain/startTai";
             var postData = {
                 unlockAccount: this.unlockAccount,
-                password: this.unlockAccountPassword
+                password: this.unlockAccountPassword,
+                port: this.port,
+                rpcPort: this.rpcPort
             }
             this.$http.post(url, JSON.stringify(postData)).then(response => {
                 this.startTaiResult = "startTai:" + response.body;
-            }, response => {
+            }, err => {
 
             });
         },
         stopTai: function () {
-            var url = "http://localhost:8080/api/chain/stopTai";
+            var url = this.get_host() + "/api/chain/stopTai";
             this.$http.get(url).then(response => {
                 this.startTaiResult = "stopTai:" + response.body;
-            }, response => {
+            }, err => {
 
             });
         },
         addMiner: function () {
-            var url = "http://localhost:8080/api/addMiner";
+            var url = this.get_host() + "/api/addMiner";
             this.$http.post(url, this.minerAddress).then(res => {
                 this.addResult = res.body;
-            },res=>{
+            },err=>{
 
             });
         },
         addEnode: function () {
-            var url = "http://localhost:8080/api/addEnode";
+            var url = this.get_host() + "/api/addEnode";
             this.$http.post(url, this.enodeAddress).then(res => {
                 this.addResult = res.body;
-            },res=>{
+            },err=>{
 
             });
         },
         addContract: function () {
-            var url = "http://localhost:8080/api/addContract";
+            var url = this.get_host() + "/api/addContract";
             this.$http.post(url, this.contractAddress).then(res => {
                 this.addResult = res.body;
-            },res=>{
+            },err=>{
 
             });
         },
         getMiner: function () {
-            var url = "http://localhost:8080/api/getMiner";
+            var url = this.get_host() + "/api/getMiner";
             this.$http.get(url).then(response => {
                 this.getResult = response.body;
-            }, response => {
+            }, err => {
 
             });
         },
         getEnode: function () {
-            var url = "http://localhost:8080/api/getEnode";
+            var url = this.get_host() + "/api/getEnode";
             this.$http.get(url).then(response => {
                 this.getResult = response.body;
-            }, response => {
+            }, err => {
 
             });
         },
         getContract: function () {
-            var url = "http://localhost:8080/api/getContract";
+            var url = this.get_host() + "/api/getContract";
             this.$http.get(url).then(response => {
                 this.getResult = response.body;
-            }, response => {
+            }, err => {
 
             });
         },
         delMiner: function () {
-            var url = "http://localhost:8080/api/delMiner";
+            var url = this.get_host() + "/api/delMiner";
             this.$http.get(url).then(response => {
                 this.getResult = response.body;
-            }, response => {
+            }, err => {
 
             });
         },
         delEnode: function () {
-            var url = "http://localhost:8080/api/delEnode";
+            var url = this.get_host() + "/api/delEnode";
             this.$http.get(url).then(response => {
                 this.getResult = response.body;
-            }, response => {
+            }, err => {
 
             });
         },
         delContract: function () {
-            var url = "http://localhost:8080/api/delContract";
+            var url = this.get_host() + "/api/delContract";
             this.$http.get(url).then(response => {
                 this.getResult = response.body;
-            }, response => {
+            }, err => {
+
+            });
+        },
+        addPeer: function () {
+            var url = this.get_host() + "/api/admin/addPeer";
+            this.$http.post(url, this.addPeerAddress).then(res => {
+                this.enodeResult = res.body;
+            },err=>{
+
+            });
+        },
+        getOwnenode: function () {
+            var url = this.get_host() + "/api/admin/getOwnenode";
+            this.$http.get(url).then(res => {
+                this.enodeResult = res.bodyText;
+            }, err => {
 
             });
         }
@@ -161,18 +183,21 @@ var Main = {
             NewAccountResult: "",
             initTaiResult: "",
             genesisJsonResult: "",
-            unlockAccount: "",
-            unlockAccountPassword: "",
+            unlockAccount: "0xce439e8f2b733bcabf19f8cd2cd296f9a9b421e9",
+            unlockAccountPassword: "123",
+            port:"30305",
+            rpcPort:"8555",
             getResult: "",
             startTaiResult: "",
             addResult: "",
             minerAddress:"",
             enodeAddress:"",
-            contractAddress:""
+            contractAddress:"",
+            addPeerAddress:"",
+            enodeResult:""
         }
     }
 };
 
 var Ctor = Vue.extend(Main);
 new Ctor().$mount('#app');
-

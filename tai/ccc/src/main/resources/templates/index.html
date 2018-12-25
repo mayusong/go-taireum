@@ -28,6 +28,8 @@
 
     <input v-model="unlockAccount" placeholder="请输入账户地址">
     <input v-model="unlockAccountPassword" placeholder="请输入账户密码">
+    <input v-model="port" placeholder="请输入端口">
+    <input v-model="rpcPort" placeholder="请输入rpc端口">
     <button v-on:click="startTai">startTai</button>
     <button v-on:click="stopTai">stopTai</button>
     <p>{{ startTaiResult }}</p>
@@ -55,6 +57,13 @@
     <button v-on:click="delContract">delContract</button>
     <p>{{ getResult }}</p>
     <br><br>
+
+    <input v-model="addPeerAddress">
+    <button v-on:click="addPeer">addPeer</button>
+    <button v-on:click="getOwnenode">getOwnenode</button>
+    <p>{{ enodeResult }}</p>
+    <br><br>
+
 
     <button v-on:click="ShowAllCompany">查看所有公司</button>
     <template>
