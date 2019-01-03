@@ -2,7 +2,10 @@ package com.taireum.ccc;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,6 +14,7 @@ import org.thymeleaf.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 
 @RestController
 public class CCCController {
@@ -76,40 +80,40 @@ public class CCCController {
     }
 
 
-    @RequestMapping(value="/api/addMiner", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/addMiner", method = RequestMethod.POST)
     public String addMiner(@RequestBody String body) {
-            if (StringUtils.isEmpty(body)) {
-                return "-1";
-            }
+        if (StringUtils.isEmpty(body)) {
+            return "-1";
+        }
 
-            try {
-                File file = new File(minerJsonPath);
-                if (file.exists()) {
-                    if (StringUtils.isEmpty(minerJson)) {
-                        minerJson = FileUtils.readFileToString(file, "UTF-8");
-                    }
+        try {
+            File file = new File(minerJsonPath);
+            if (file.exists()) {
+                if (StringUtils.isEmpty(minerJson)) {
+                    minerJson = FileUtils.readFileToString(file, "UTF-8");
                 }
-                JSONArray jsonArray = JSON.parseArray(minerJson);
-                if (jsonArray != null && jsonArray.contains(body)) {
-                    return "1";
-                }
-                if (jsonArray == null) {
-                    jsonArray = new JSONArray();
-                }
-                jsonArray.add(body);
-                System.out.println(jsonArray.toString());
-                minerJson = jsonArray.toJSONString();
-                FileUtils.write(file, minerJson, "UTF-8");
-                return "0";
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+            JSONArray jsonArray = JSON.parseArray(minerJson);
+            if (jsonArray != null && jsonArray.contains(body)) {
+                return "1";
+            }
+            if (jsonArray == null) {
+                jsonArray = new JSONArray();
+            }
+            jsonArray.add(body);
+            System.out.println(jsonArray.toString());
+            minerJson = jsonArray.toJSONString();
+            FileUtils.write(file, minerJson, "UTF-8");
+            return "0";
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return "-1";
     }
 
-    @RequestMapping(value="/api/addEnode", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/addEnode", method = RequestMethod.POST)
     public String addEnode(@RequestBody String body) {
         if (StringUtils.isEmpty(body)) {
             return "-1";
@@ -142,7 +146,7 @@ public class CCCController {
         return "-1";
     }
 
-    @RequestMapping(value="/api/addContract", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/addContract", method = RequestMethod.POST)
     public String addContract(@RequestBody String body) {
         if (StringUtils.isEmpty(body)) {
             return "-1";
@@ -184,6 +188,7 @@ public class CCCController {
         }
         return "1";
     }
+
     @RequestMapping("/api/delEnode")
     public String delEnode() {
         enodeJson = "";
@@ -193,6 +198,7 @@ public class CCCController {
         }
         return "1";
     }
+
     @RequestMapping("/api/delContract")
     public String delContract() {
         contractJson = "";
@@ -201,5 +207,22 @@ public class CCCController {
             return "0";
         }
         return "1";
+    }
+
+    public static void initConfigJson(String local_host, String local_host_port) {
+        String configName = "config.json";
+        String host = "http://" + local_host + ":" + local_host_port;
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("EnodeUrl",  host + "/api/getEnode");
+        jsonObject.put("RpcUrl",  host + "/api/getRpc");
+        jsonObject.put("MinerUrl",  host + "/api/getMiner");
+        jsonObject.put("ContractUrl",  host + "/api/getContract");
+
+        try {
+            FileUtils.write(new File(configName), jsonObject.toJSONString(), "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

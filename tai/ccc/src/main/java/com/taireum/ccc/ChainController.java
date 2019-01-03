@@ -7,6 +7,7 @@ import org.apache.commons.exec.DaemonExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,13 +17,20 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Collection;
+
+import static com.taireum.ccc.CCCController.initConfigJson;
 
 @RestController
 public class ChainController {
 
     @Autowired
     private RpcConfig mRpcConfig;
+
+    @Autowired
+    Environment environment;
 
     private String mDataDir = "tai_data_dir";
     private DaemonExecutor mDaemonExecutor = null;
@@ -63,6 +71,11 @@ public class ChainController {
 
     @RequestMapping(value="/api/chain/initTai", method = RequestMethod.GET)
     public String initTai() {
+
+        String local_host = InetAddress.getLoopbackAddress().getHostAddress();
+        String local_host_port = environment.getProperty("local.server.port");
+        initConfigJson(local_host, local_host_port);
+
         String genesisJson = "genesis.json";
 
         //geth --datadir tai_data_dir init TaiTest.json
@@ -89,6 +102,7 @@ public class ChainController {
 
     @RequestMapping(value="/api/chain/startTai", method = RequestMethod.POST)
     public String startTai(@RequestBody String body) {
+
         File pwdPath = new File("startTaiPassword");
         boolean isStartMine = true;
         String unlockAccount = "";

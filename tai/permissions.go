@@ -57,7 +57,7 @@ func getP2pPermissionedNodes() []string {
 }
 
 func parseP2pPermissionedNodes() []*discv5.Node {
-	resp, err := http.Get(EnodeUrlConfig)
+	resp, err := http.Get(GetEnodeConfigUrl())
 	if err != nil {
 		log.Error("CCC Network is unavailable", "err", err)
 		return nil
@@ -109,7 +109,7 @@ func IsRpcPermissioned(ipAddr string) bool {
 
 // todo: add cache support
 func getRpcPermissionedIps() []string {
-	resp, err := http.Get(RpcUrlConfig)
+	resp, err := http.Get(GetRpcConfigUrl())
 	if err != nil {
 		log.Error("CCC Network is unavailable", "err", err)
 		return nil

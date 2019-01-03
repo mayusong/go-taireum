@@ -29,18 +29,18 @@ func ListFromUrl(url string) []string{
 	return list
 }
 
-func ListFromFile(file_path string) []string {
+func JsonFromFile(file_path string) map[string]interface{} {
 	body, err := ioutil.ReadFile(file_path)
 	if err != nil {
 		log.Error("read file failed:" + file_path, "err:", err)
 		return nil
 	}
 
-	list := []string{}
-	if err := json.Unmarshal(body, &list); err != nil {
+	jsonString := map[string]interface{} {}
+	if err := json.Unmarshal(body, &jsonString); err != nil {
 		log.Error("parse json failed:" + file_path, "err:", err)
 		return nil
 	}
 
-	return list
+	return jsonString
 }
