@@ -64,45 +64,51 @@
     <p>{{ enodeResult }}</p>
     <br><br>
 
+    <!--<button v-on:click="initAllInOne">一键创建创始节点</button>-->
+    <!--<p>{{ enodeResult_AllInOne }}</p>-->
+    <!--<input v-model="addPeer_AllInOne">-->
+    <!--<button v-on:click="addPeerAllInOne">一键加入区块链网络</button>-->
+    <!--<br><br>-->
 
-    <button v-on:click="ShowAllCompany">查看所有公司</button>
-    <template>
-        <el-table
-                :data="tableData"
-                stripe
-                style="width: 100%">
-            <el-table-column
-                    prop="CompanyId"
-                    label="ID"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="CompanyName"
-                    label="名称"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="email"
-                    label="email">
-            </el-table-column>
-            <el-table-column
-                    prop="stat"
-                    label="stat">
-            </el-table-column>
-            <el-table-column
-                    prop="enode"
-                    label="enode">
-            </el-table-column>
-            <el-table-column
-                    fixed="right"
-                    label="投票"
-                    width="100">
-                <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="text" size="small">投票</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-    </template>
+    <!---->
+    <!--<button v-on:click="ShowAllCompany">查看所有公司</button>-->
+    <!--<template>-->
+        <!--<el-table-->
+                <!--:data="tableData"-->
+                <!--stripe-->
+                <!--style="width: 100%">-->
+            <!--<el-table-column-->
+                    <!--prop="CompanyId"-->
+                    <!--label="ID"-->
+                    <!--width="180">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+                    <!--prop="CompanyName"-->
+                    <!--label="名称"-->
+                    <!--width="180">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+                    <!--prop="email"-->
+                    <!--label="email">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+                    <!--prop="stat"-->
+                    <!--label="stat">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+                    <!--prop="enode"-->
+                    <!--label="enode">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+                    <!--fixed="right"-->
+                    <!--label="投票"-->
+                    <!--width="100">-->
+                <!--<template slot-scope="scope">-->
+                    <!--<el-button @click="handleClick(scope.row)" type="text" size="small">投票</el-button>-->
+                <!--</template>-->
+            <!--</el-table-column>-->
+        <!--</el-table>-->
+    <!--</template>-->
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>

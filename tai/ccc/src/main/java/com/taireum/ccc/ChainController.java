@@ -149,7 +149,7 @@ public class ChainController {
 
         System.out.println(unlockAccount + " " + password);
 
-        String startCmds = "geth --datadir " + mDataDir + " --nodiscover --networkid " + networkid + " --port "
+        String startCmds = "geth --datadir " + mDataDir + " --nodiscover --ipcdisable --networkid " + networkid + " --port "
                 + port + " --rpc --rpccorsdomain \"*\" --rpcapi " + rpcapi + " --rpcport " + rpcPort + " ";
         if (isStartMine) {
             startCmds += " --mine --unlock " + unlockAccount + " --password startTaiPassword --etherbase " + unlockAccount + " --verbosity 0";
@@ -168,8 +168,6 @@ public class ChainController {
                 mDaemonExecutor.execute(commandLine);
                 result = "0";
             }
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }

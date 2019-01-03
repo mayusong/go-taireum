@@ -173,6 +173,18 @@ var Main = {
             }, err => {
 
             });
+        },
+        initAllInOne: function () {
+            //newAccount
+            //addGenesis.json
+            //initTai
+            //addMiner
+            //startTai
+            //addEnode
+            //getOwnEnode
+        },
+        addPeerAllInOne: function () {
+            
         }
     },
     data: function () {
@@ -183,10 +195,10 @@ var Main = {
             NewAccountResult: "",
             initTaiResult: "",
             genesisJsonResult: "",
-            unlockAccount: "0xce439e8f2b733bcabf19f8cd2cd296f9a9b421e9",
-            unlockAccountPassword: "123",
-            port:"30305",
-            rpcPort:"8555",
+            unlockAccount: "",
+            unlockAccountPassword: "",
+            port:"",
+            rpcPort:"",
             getResult: "",
             startTaiResult: "",
             addResult: "",
@@ -194,7 +206,9 @@ var Main = {
             enodeAddress:"",
             contractAddress:"",
             addPeerAddress:"",
-            enodeResult:""
+            enodeResult:"",
+            enodeResult_AllInOne:"",
+            addPeer_AllInOne:""
         }
     }
 };
