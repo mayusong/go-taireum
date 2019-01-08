@@ -64,57 +64,67 @@
     <p>{{ enodeResult }}</p>
     <br><br>
 
+    <input v-model="companyName" placeholder="公司名">
+    <input v-model="email" placeholder="邮箱">
+    <input v-model="remark" placeholder="备注">
+    <input v-model="enode" placeholder="enode">
+    <button v-on:click="deployCCC">部署CCC合约</button>
+
+    <br><br>
+    <input v-model="contractAddress" placeholder="合约地址">
+    <button v-on:click="loadCCC">加载CCC合约</button>
+    <p>{{ deployResult }}</p>
+    <br>
+
+    <input v-model="companyName2" placeholder="公司名">
+    <input v-model="email2" placeholder="邮箱">
+    <input v-model="remark2" placeholder="备注">
+    <input v-model="enode2" placeholder="enode">
+    <input v-model="account2" placeholder="账户地址">
+    <button v-on:click="applyMember">增加成员</button>
+    <p>{{ applyResult }}</p>
+    <br>
+
+    <button v-on:click="showCompanyNum">获取公司个数</button>
+    <p>{{ showCompanyNumResult }}</p>
+
     <!--<button v-on:click="initAllInOne">一键创建创始节点</button>-->
     <!--<p>{{ enodeResult_AllInOne }}</p>-->
     <!--<input v-model="addPeer_AllInOne">-->
     <!--<button v-on:click="addPeerAllInOne">一键加入区块链网络</button>-->
     <!--<br><br>-->
 
-    <!---->
-    <!--<button v-on:click="ShowAllCompany">查看所有公司</button>-->
-    <!--<template>-->
-        <!--<el-table-->
-                <!--:data="tableData"-->
-                <!--stripe-->
-                <!--style="width: 100%">-->
-            <!--<el-table-column-->
-                    <!--prop="CompanyId"-->
-                    <!--label="ID"-->
-                    <!--width="180">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                    <!--prop="CompanyName"-->
-                    <!--label="名称"-->
-                    <!--width="180">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                    <!--prop="email"-->
-                    <!--label="email">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                    <!--prop="stat"-->
-                    <!--label="stat">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                    <!--prop="enode"-->
-                    <!--label="enode">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                    <!--fixed="right"-->
-                    <!--label="投票"-->
-                    <!--width="100">-->
-                <!--<template slot-scope="scope">-->
-                    <!--<el-button @click="handleClick(scope.row)" type="text" size="small">投票</el-button>-->
-                <!--</template>-->
-            <!--</el-table-column>-->
-        <!--</el-table>-->
-    <!--</template>-->
+
+    <button v-on:click="ShowAllCompany">查看所有公司</button>
+    <template>
+        <el-table
+                :data="tableData"
+                stripe
+                style="width: 100%">
+            <el-table-column prop="CompanyId" label="ID" width="180">
+            </el-table-column>
+            <el-table-column prop="CompanyName" label="名称" width="180">
+            </el-table-column>
+            <el-table-column prop="email" label="email" width="180">
+            </el-table-column>
+            <el-table-column prop="stat" label="stat" width="180">
+            </el-table-column>
+            <el-table-column prop="enode" label="enode">
+            </el-table-column>
+            <el-table-column fixed="right" label="投票" width="100">
+                <template slot-scope="scope">
+                    <el-button @click="handleClick(scope.row)" type="text" size="small">投票</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </template>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
 <script src="index.js"></script>
+<script src="../static/index.js"></script>
 <script>
 
 

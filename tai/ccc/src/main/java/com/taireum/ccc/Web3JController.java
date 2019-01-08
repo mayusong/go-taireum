@@ -17,10 +17,9 @@ public class Web3JController {
     @Autowired
     private RpcConfig mRpcConfig;
     private static JsonRpc2_0Tai tai = null;
-    private String mRpcAddr;
     private JsonRpc2_0Tai getTaiInstance() {
         if (tai == null) {
-            mRpcAddr = "http://" + mRpcConfig.getRpcAddr() + ":" + mRpcConfig.getRpcPort();
+            String mRpcAddr = "http://" + mRpcConfig.getRpcAddr() + ":" + mRpcConfig.getRpcPort();
             tai = new JsonRpc2_0Tai(new HttpService(mRpcAddr));
         }
         return tai;

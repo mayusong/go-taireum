@@ -18,8 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Collection;
 
 import static com.taireum.ccc.CCCController.initConfigJson;
 
@@ -33,7 +31,9 @@ public class ChainController {
     Environment environment;
 
     private String mDataDir = "tai_data_dir";
+
     private DaemonExecutor mDaemonExecutor = null;
+
     @RequestMapping(value="/api/chain/addGenesis", method = RequestMethod.POST)
     public String addGenesis(@RequestBody String payload) {
 
@@ -77,7 +77,6 @@ public class ChainController {
         initConfigJson(local_host, local_host_port);
 
         String genesisJson = "genesis.json";
-
         //geth --datadir tai_data_dir init TaiTest.json
         String command = "geth --datadir " + mDataDir + " init " + genesisJson;
         try {
@@ -115,7 +114,7 @@ public class ChainController {
                 unlockAccount = "0x" + unlockAccount;
             }
 
-            if (!checkValidAccount(unlockAccount)) {
+            if (!CredentialsUtils.checkValidAccount(mDataDir, unlockAccount)) {
                 return "-1";
             }
 
@@ -143,6 +142,8 @@ public class ChainController {
         }
         mRpcConfig.setRpcPort(rpcPort);
         mRpcConfig.setRpcAddr("127.0.0.1");
+        mRpcConfig.setAccount(unlockAccount);
+        mRpcConfig.setPassword(password);
 
         String networkid = "40602";
         String rpcapi = "\"db,debug,eth,net,web3,personal,shh,txpool,web3,admin\"";
@@ -173,21 +174,6 @@ public class ChainController {
         }
 
         return result;
-    }
-
-    private boolean checkValidAccount(String unlockAccount) {
-        if (unlockAccount.toLowerCase().startsWith("0x")) {
-            unlockAccount = unlockAccount.replaceAll("0x", "");
-        }
-        File keystore = new File(mDataDir + "/keystore");
-
-        Collection<File> files = FileUtils.listFiles(keystore, null, false);
-        for (File file : files) {
-            if (file.getName().toLowerCase().endsWith(unlockAccount.toLowerCase())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @RequestMapping(value="/api/chain/stopTai", method = RequestMethod.GET)
