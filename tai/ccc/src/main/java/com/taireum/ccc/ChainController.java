@@ -150,7 +150,7 @@ public class ChainController {
 
         System.out.println(unlockAccount + " " + password);
 
-        String startCmds = "geth  --verbosity 3 --datadir " + mDataDir + " --nodiscover --ipcdisable --networkid " + networkid + " --port "
+        String startCmds = "geth  --verbosity 0 --datadir " + mDataDir + " --nodiscover --ipcdisable --networkid " + networkid + " --port "
                 + port + " --rpc --rpccorsdomain \"*\" --rpcapi " + rpcapi + " --rpcport " + rpcPort + " ";
         if (isStartMine) {
             startCmds += " --mine --unlock " + unlockAccount + " --password startTaiPassword --etherbase " + unlockAccount;

@@ -1,9 +1,7 @@
 package com.taireum.ccc;
 
 import org.junit.Test;
-import org.web3j.crypto.Credentials;
 
-import static org.junit.Assert.*;
 
 public class CredentialsUtilsTest {
 

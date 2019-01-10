@@ -24,3 +24,14 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+bin/
+gradle/
+tai_data_dir/
+.initLock
+config.json
+contract.json
+enode.json
+genesis.json
+miner.json
+startTaiPassword
+.vscode

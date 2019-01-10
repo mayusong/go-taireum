@@ -1,9 +1,7 @@
 package com.taireum.ccc;
 
 import org.apache.commons.io.FileUtils;
-import org.attoparser.util.TextUtil;
 import org.thymeleaf.util.StringUtils;
-import org.thymeleaf.util.TextUtils;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;

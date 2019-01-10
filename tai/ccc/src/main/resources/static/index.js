@@ -30,7 +30,7 @@ var Main = {
                 this.genesisJsonResult = response.body;
             }, err => {
 
-            })
+            });
         },
         delGenesisJson: function () {
             let url = this.get_host() + "/api/chain/delGenesis";
@@ -42,8 +42,8 @@ var Main = {
             });
         },
         startTai: function () {
-            if (this.unlockAccount === "" || this.unlockAccountPassword === ""
-                || this.port === "" || this.rpcPort === "") {
+            if (this.unlockAccount === "" || this.unlockAccountPassword === "" || 
+                this.port === "" || this.rpcPort === "") {
                 alert("账户地址和密码, port, rpcport不能为空");
                 return;
             }
@@ -186,7 +186,7 @@ var Main = {
             let url = this.get_host() + "/api/Union/loadCCC";
             let postData = {
                 contractAddress: this.contractAddress
-            }
+            };
             this.$http.post(url, JSON.stringify(postData)).then(response => {
                 this.deployResult = response.bodyText;
             }, err => {
@@ -209,7 +209,7 @@ var Main = {
             });
         },
         showCompanyNum: function () {
-            let url = this.get_host() + "/api/Union/showCompanyNum"
+            let url = this.get_host() + "/api/Union/showCompanyNum";
             this.$http.get(url).then(res => {
                 this.showCompanyNumResult = res.bodyText;
             }, err => {
@@ -217,11 +217,11 @@ var Main = {
             });
         },
         updateTableData: function () {
-            let url = this.get_host() + "/api/Union/showAllCompany"
+            let url = this.get_host() + "/api/Union/showAllCompany";
             this.$http.get(url).then(res => {
                 let newdata = [];
                 let companys = JSON.parse(res.bodyText);
-                console.log(res.bodyText)
+                console.log(res.bodyText);
 
                 for (let index in companys) {
                     let mapCompany = JSON.parse(companys[index]);
@@ -234,7 +234,7 @@ var Main = {
             });
         },
         ShowAllCompany: function () {
-            this.updateTableData()
+            this.updateTableData();
         },
         handleClick: function (row) {
             console.log(row);
@@ -267,7 +267,6 @@ var Main = {
             remark: "",
             enode: "",
             deployResult: "",
-            contractAddress: "",
             companyName2: "",
             email2: "",
             remark2: "",
@@ -275,7 +274,7 @@ var Main = {
             account2: "",
             applyResult: "",
             showCompanyNumResult: ""
-        }
+        };
     }
 };
 
