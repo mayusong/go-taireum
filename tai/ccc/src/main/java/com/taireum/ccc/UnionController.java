@@ -49,7 +49,7 @@ public class UnionController {
         return  mCredentials;
     }
 
-    @RequestMapping(value = "/Union/deployCCC", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/Union/deployCCC", method = RequestMethod.POST)
     private String deployCCCContract(@RequestBody String body) {
         if (StringUtils.isEmpty(body)) {
             return "-1";
@@ -71,7 +71,7 @@ public class UnionController {
         return "-1";
     }
 
-    @RequestMapping(value = "/Union/loadCCC", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/Union/loadCCC", method = RequestMethod.POST)
     private String loadCCCContract(@RequestBody String body) {
         if (StringUtils.isEmpty(body)) {
             return "-1";
@@ -82,7 +82,7 @@ public class UnionController {
         return ccc_sol_ccc.getContractAddress();
     }
 
-    @RequestMapping(value = "/Union/applyMember", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/Union/applyMember", method = RequestMethod.POST)
     private String applyMember(@RequestBody String body) {
         if (ccc_sol_ccc == null) {
             return "-1";
@@ -102,7 +102,7 @@ public class UnionController {
         return "";
     }
 
-    @RequestMapping(value = "/Union/showCompanyNum", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/Union/showCompanyNum", method = RequestMethod.GET)
     private String showCompanyNum() {
         if (ccc_sol_ccc == null) {
             return "-1";
@@ -117,7 +117,7 @@ public class UnionController {
         return "";
     }
 
-    @RequestMapping(value = "/Union/showAllCompany", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/Union/showAllCompany", method = RequestMethod.GET)
     private String showAllCompany() {
         if (ccc_sol_ccc == null) {
             return "[]";
@@ -125,7 +125,8 @@ public class UnionController {
         try {
             JSONArray jsonArray = new JSONArray();
             BigInteger sum = ccc_sol_ccc.ShowSum().send();
-            for (int i = 0; i < sum.intValue(); i++) {
+            //合约里面的成员信息从第1个开始
+            for (int i = 1; i <= sum.intValue(); i++) {
                 String companyDetail = showCompany(String.valueOf(i));
                 jsonArray.add(companyDetail);
             }
@@ -136,7 +137,7 @@ public class UnionController {
         return "[]";
     }
 
-    @RequestMapping(value = "/Union/showCompany", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/Union/showCompany", method = RequestMethod.GET)
     private String showCompany(String id) {
         if (ccc_sol_ccc == null) {
             return "{}";
@@ -145,7 +146,9 @@ public class UnionController {
             return "{}";
         }
         try {
-            Tuple6<String, String, String, String, String, BigInteger> tuple6 = ccc_sol_ccc.ShowCompany(new BigInteger(id.getBytes())).send();
+            BigInteger _id = new BigInteger(id);
+
+            Tuple6<String, String, String, String, String, BigInteger> tuple6 = ccc_sol_ccc.ShowCompany(_id).send();
             String companyName = tuple6.getValue1();
             String email = tuple6.getValue2();
             String remark = tuple6.getValue3();
@@ -167,5 +170,37 @@ public class UnionController {
         return "{}";
     }
 
+    @RequestMapping(value = "/api/Union/VoteMember", method = RequestMethod.GET)
+    private String voteMember(String fromid, String toid) {
+        return "";
+    }
 
+    @RequestMapping(value = "/api/Union/VoteMine", method = RequestMethod.GET)
+    private String voteMine(String fromid, String toid) {
+        return "";
+    }
+
+    @RequestMapping(value = "/api/Union/UpdateCompany", method = RequestMethod.POST)
+    private String updateCompany(@RequestBody String body) {
+        return "";
+    }
+    @RequestMapping(value = "/api/Union/ShowBallot", method = RequestMethod.GET)
+    private String showBallot(String id) {
+        return "";
+    }
+
+    @RequestMapping(value = "/api/Union/ShowBallotMine", method = RequestMethod.GET)
+    private String showBallotMine(String id) {
+        return "";
+    }
+
+    @RequestMapping(value = "/api/Union/isMember", method = RequestMethod.GET)
+    private String isMember(String id) {
+        return "";
+    }
+
+    @RequestMapping(value = "/api/Union/isMemberMine", method = RequestMethod.GET)
+    private String isMemberMine(String id) {
+        return "";
+    }
 }

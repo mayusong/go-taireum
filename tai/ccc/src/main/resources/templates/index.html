@@ -101,15 +101,17 @@
                 :data="tableData"
                 stripe
                 style="width: 100%">
-            <el-table-column prop="CompanyId" label="ID" width="180">
+            <el-table-column prop="owner" label="account" width="180">
             </el-table-column>
-            <el-table-column prop="CompanyName" label="名称" width="180">
+            <el-table-column prop="companyName" label="名称" width="180">
             </el-table-column>
             <el-table-column prop="email" label="email" width="180">
             </el-table-column>
             <el-table-column prop="stat" label="stat" width="180">
             </el-table-column>
             <el-table-column prop="enode" label="enode">
+            </el-table-column>
+            <el-table-column prop="remark" label="enode">
             </el-table-column>
             <el-table-column fixed="right" label="投票" width="100">
                 <template slot-scope="scope">
@@ -124,7 +126,6 @@
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
 <script src="index.js"></script>
-<script src="../static/index.js"></script>
 <script>
 
 
