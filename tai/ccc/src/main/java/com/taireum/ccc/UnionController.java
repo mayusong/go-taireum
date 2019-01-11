@@ -120,7 +120,7 @@ public class UnionController {
         try {
             JSONArray jsonArray = new JSONArray();
             BigInteger sum = ccc_sol_ccc.ShowSum().send();
-            //合约里面的成员信息从第1个开始
+            //Company ID从1 开始
             for (int i = 1; i <= sum.intValue(); i++) {
                 String companyDetail = showCompany(String.valueOf(i));
                 jsonArray.add(companyDetail);
@@ -152,6 +152,7 @@ public class UnionController {
             BigInteger stat = tuple6.getValue6();
 
             JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", id);
             jsonObject.put("companyName", companyName);
             jsonObject.put("email", email);
             jsonObject.put("remark", remark);

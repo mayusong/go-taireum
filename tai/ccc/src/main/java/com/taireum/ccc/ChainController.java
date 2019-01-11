@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DaemonExecutor;
+import org.apache.commons.exec.ExecuteException;
+import org.apache.commons.exec.ExecuteResultHandler;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,7 @@ public class ChainController {
     private String mDataDir = "tai_data_dir";
 
     private DaemonExecutor mDaemonExecutor = null;
-
+    
     @RequestMapping(value="/api/chain/addGenesis", method = RequestMethod.POST)
     public String addGenesis(@RequestBody String payload) {
 
@@ -150,12 +152,12 @@ public class ChainController {
 
         System.out.println(unlockAccount + " " + password);
 
-        String startCmds = "geth  --verbosity 0 --datadir " + mDataDir + " --nodiscover --ipcdisable --networkid " + networkid + " --port "
-                + port + " --rpc --rpccorsdomain \"*\" --rpcapi " + rpcapi + " --rpcport " + rpcPort + " ";
+        String startCmds = "geth --verbosity 0 --datadir " + mDataDir + " --nodiscover --ipcdisable --networkid " + networkid + " --port "
+                + port + " --rpc --rpccorsdomain \"*\" --rpcapi " + rpcapi + " --rpcport " + rpcPort;
         if (isStartMine) {
             startCmds += " --mine --unlock " + unlockAccount + " --password startTaiPassword --etherbase " + unlockAccount;
         }
-        String result = "1";
+        String result = "-1";
         try {
 
             System.out.println(startCmds);
@@ -164,7 +166,18 @@ public class ChainController {
                 CommandLine commandLine = CommandLine.parse(startCmds);
                 mDaemonExecutor = new DaemonExecutor();
                 mDaemonExecutor.setWatchdog(new ExecuteWatchdog(-1));
-                mDaemonExecutor.execute(commandLine);
+                mDaemonExecutor.execute(commandLine, new ExecuteResultHandler(){
+                
+                    @Override
+                    public void onProcessFailed(ExecuteException e) {
+                        System.out.println("onProcessFailed");
+                    }
+                
+                    @Override
+                    public void onProcessComplete(int exitValue) {
+                        System.out.println("onProcessComplete");
+                    }
+                });
                 result = "0";
             }
         } catch (IOException e) {

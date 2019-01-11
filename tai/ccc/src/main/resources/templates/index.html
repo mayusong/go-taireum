@@ -1,134 +1,136 @@
 <html xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+
 <head>
     <link rel="stylesheet" href="index.css">
     <meta charset="UTF-8">
     <!-- import CSS -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
+
 <body>
 
 
-<div id="app">
+    <div id="app">
 
-    <input v-model="NewAccountPassword" placeholder="请输入密码">
-    <button v-on:click="NewAccount">NewAccount</button>
-    {{ NewAccountResult }}
-    <br><br>
+        <input v-model="NewAccountPassword" placeholder="请输入密码">
+        <button v-on:click="NewAccount">NewAccount</button>
+        {{ NewAccountResult }}
+        <br><br>
 
-    <textarea v-model="genesisJson" placeholder="genesis.json"></textarea>
-    <button v-on:click="addGenesisJson">addGenesisJson</button>
-    <button v-on:click="delGenesisJson">delGenesisJson</button>
-    <p>{{ genesisJsonResult }}</p>
-    <br><br>
-
-
-    <button v-on:click="initTai">initTai</button>
-    {{ initTaiResult }}
-    <br><br>
-
-    <input v-model="unlockAccount" placeholder="请输入账户地址">
-    <input v-model="unlockAccountPassword" placeholder="请输入账户密码">
-    <input v-model="port" placeholder="请输入端口">
-    <input v-model="rpcPort" placeholder="请输入rpc端口">
-    <button v-on:click="startTai">startTai</button>
-    <button v-on:click="stopTai">stopTai</button>
-    <p>{{ startTaiResult }}</p>
-    <br><br>
+        <textarea v-model="genesisJson" placeholder="genesis.json"></textarea>
+        <button v-on:click="addGenesisJson">addGenesisJson</button>
+        <button v-on:click="delGenesisJson">delGenesisJson</button>
+        <p>{{ genesisJsonResult }}</p>
+        <br><br>
 
 
-    <input v-model="minerAddress">
-    <button v-on:click="addMiner">addMiner</button>
+        <button v-on:click="initTai">initTai</button>
+        {{ initTaiResult }}
+        <br><br>
 
-    <input v-model="enodeAddress">
-    <button v-on:click="addEnode">addEnode</button>
-
-    <input v-model="contractAddress">
-    <button v-on:click="addContract">addContract</button>
-
-    <p>{{ addResult }}</p>
-    <br><br>
-
-    <button v-on:click="getMiner">getMiner</button>
-    <button v-on:click="getEnode">getEnode</button>
-    <button v-on:click="getContract">getContract</button>
-
-    <button v-on:click="delMiner">delMiner</button>
-    <button v-on:click="delEnode">delEnode</button>
-    <button v-on:click="delContract">delContract</button>
-    <p>{{ getResult }}</p>
-    <br><br>
-
-    <input v-model="addPeerAddress">
-    <button v-on:click="addPeer">addPeer</button>
-    <button v-on:click="getOwnenode">getOwnenode</button>
-    <p>{{ enodeResult }}</p>
-    <br><br>
-
-    <input v-model="companyName" placeholder="公司名">
-    <input v-model="email" placeholder="邮箱">
-    <input v-model="remark" placeholder="备注">
-    <input v-model="enode" placeholder="enode">
-    <button v-on:click="deployCCC">部署CCC合约</button>
-
-    <br><br>
-    <input v-model="contractAddress" placeholder="合约地址">
-    <button v-on:click="loadCCC">加载CCC合约</button>
-    <p>{{ deployResult }}</p>
-    <br>
-
-    <input v-model="companyName2" placeholder="公司名">
-    <input v-model="email2" placeholder="邮箱">
-    <input v-model="remark2" placeholder="备注">
-    <input v-model="enode2" placeholder="enode">
-    <input v-model="account2" placeholder="账户地址">
-    <button v-on:click="applyMember">增加成员</button>
-    <p>{{ applyResult }}</p>
-    <br>
-
-    <button v-on:click="showCompanyNum">获取公司个数</button>
-    <p>{{ showCompanyNumResult }}</p>
-
-    <!--<button v-on:click="initAllInOne">一键创建创始节点</button>-->
-    <!--<p>{{ enodeResult_AllInOne }}</p>-->
-    <!--<input v-model="addPeer_AllInOne">-->
-    <!--<button v-on:click="addPeerAllInOne">一键加入区块链网络</button>-->
-    <!--<br><br>-->
+        <input v-model="unlockAccount" placeholder="请输入账户地址">
+        <input v-model="unlockAccountPassword" placeholder="请输入账户密码">
+        <input v-model="port" placeholder="请输入端口">
+        <input v-model="rpcPort" placeholder="请输入rpc端口">
+        <button v-on:click="startTai">startTai</button>
+        <button v-on:click="stopTai">stopTai</button>
+        <p>{{ startTaiResult }}</p>
+        <br><br>
 
 
-    <button v-on:click="ShowAllCompany">查看所有公司</button>
-    <template>
-        <el-table
-                :data="tableData"
-                stripe
-                style="width: 100%">
-            <el-table-column prop="owner" label="account" width="180">
-            </el-table-column>
-            <el-table-column prop="companyName" label="名称" width="180">
-            </el-table-column>
-            <el-table-column prop="email" label="email" width="180">
-            </el-table-column>
-            <el-table-column prop="stat" label="stat" width="180">
-            </el-table-column>
-            <el-table-column prop="enode" label="enode">
-            </el-table-column>
-            <el-table-column prop="remark" label="enode">
-            </el-table-column>
-            <el-table-column fixed="right" label="投票" width="100">
-                <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="text" size="small">投票</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-    </template>
-</div>
+        <input v-model="minerAddress">
+        <button v-on:click="addMiner">addMiner</button>
 
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
-<script src="index.js"></script>
-<script>
+        <input v-model="enodeAddress">
+        <button v-on:click="addEnode">addEnode</button>
+
+        <input v-model="contractAddress">
+        <button v-on:click="addContract">addContract</button>
+
+        <p>{{ addResult }}</p>
+        <br><br>
+
+        <button v-on:click="getMiner">getMiner</button>
+        <button v-on:click="getEnode">getEnode</button>
+        <button v-on:click="getContract">getContract</button>
+
+        <button v-on:click="delMiner">delMiner</button>
+        <button v-on:click="delEnode">delEnode</button>
+        <button v-on:click="delContract">delContract</button>
+        <p>{{ getResult }}</p>
+        <br><br>
+
+        <input v-model="addPeerAddress">
+        <button v-on:click="addPeer">addPeer</button>
+        <button v-on:click="getOwnenode">getOwnenode</button>
+        <p>{{ enodeResult }}</p>
+        <br><br>
+
+        <input v-model="companyName" placeholder="公司名">
+        <input v-model="email" placeholder="邮箱">
+        <input v-model="remark" placeholder="备注">
+        <input v-model="enode" placeholder="enode">
+        <button v-on:click="deployCCC">部署CCC合约</button>
+
+        <br><br>
+        <input v-model="contractAddress" placeholder="合约地址">
+        <button v-on:click="loadCCC">加载CCC合约</button>
+        <p>{{ deployResult }}</p>
+        <br>
+
+        <input v-model="companyName2" placeholder="公司名">
+        <input v-model="email2" placeholder="邮箱">
+        <input v-model="remark2" placeholder="备注">
+        <input v-model="enode2" placeholder="enode">
+        <input v-model="account2" placeholder="账户地址">
+        <button v-on:click="applyMember">增加成员</button>
+        <p>{{ applyResult }}</p>
+        <br>
+
+        <button v-on:click="showCompanyNum">获取公司个数</button>
+        <p>{{ showCompanyNumResult }}</p>
+
+        <!--<button v-on:click="initAllInOne">一键创建创始节点</button>-->
+        <!--<p>{{ enodeResult_AllInOne }}</p>-->
+        <!--<input v-model="addPeer_AllInOne">-->
+        <!--<button v-on:click="addPeerAllInOne">一键加入区块链网络</button>-->
+        <!--<br><br>-->
 
 
-</script>
+        <button v-on:click="ShowAllCompany">查看所有公司</button>
+        <template>
+            <el-table :data="tableData" stripe style="width: 100%">
+                <el-table-column prop="id" label="id" width="180">
+                </el-table-column>
+                <el-table-column prop="owner" label="account" width="180">
+                </el-table-column>
+                <el-table-column prop="companyName" label="名称" width="180">
+                </el-table-column>
+                <el-table-column prop="email" label="email" width="180">
+                </el-table-column>
+                <el-table-column prop="stat" label="stat" width="180">
+                </el-table-column>
+                <el-table-column prop="enode" label="enode">
+                </el-table-column>
+                <el-table-column prop="remark" label="enode">
+                </el-table-column>
+                <el-table-column fixed="right" label="投票" width="100">
+                    <template slot-scope="scope">
+                        <el-button @click="handleClick(scope.row)" type="text" size="small">投票</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </template>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+    <script src="index.js"></script>
+    <script>
+
+
+    </script>
 </body>
+
 </html>

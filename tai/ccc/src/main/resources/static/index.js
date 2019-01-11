@@ -5,7 +5,7 @@ var Main = {
         },
         NewAccount: function () {
             let url = this.get_host() + "/api/chain/newAccount";
-            let postData = {"password": this.NewAccountPassword};
+            let postData = { "password": this.NewAccountPassword };
 
             this.$http.post(url, JSON.stringify(postData)).then(response => {
                 console.log(response.body);
@@ -42,7 +42,7 @@ var Main = {
             });
         },
         startTai: function () {
-            if (this.unlockAccount === "" || this.unlockAccountPassword === "" || 
+            if (this.unlockAccount === "" || this.unlockAccountPassword === "" ||
                 this.port === "" || this.rpcPort === "") {
                 alert("账户地址和密码, port, rpcport不能为空");
                 return;

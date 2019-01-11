@@ -35,7 +35,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-configuration-processor"
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile group: 'com.taireum', name: 'web3jplus', version: '0.1'
-    compile group: 'com.taireum', name: 'taisdk4j', version: '0.2'
+    compile group: 'com.taireum', name: 'taisdk4j', version: '0.4'
     compile ('org.web3j:core:4.0.0')
     compile 'com.alibaba:fastjson:1.2.54'
     compile group: 'org.apache.commons', name: 'commons-exec', version: '1.3'
