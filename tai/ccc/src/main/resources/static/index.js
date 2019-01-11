@@ -5,7 +5,7 @@ var Main = {
         },
         NewAccount: function () {
             let url = this.get_host() + "/api/chain/newAccount";
-            let postData = { "password": this.NewAccountPassword };
+            let postData = {"password": this.NewAccountPassword};
 
             this.$http.post(url, JSON.stringify(postData)).then(response => {
                 console.log(response.body);
@@ -19,6 +19,28 @@ var Main = {
             this.$http.get(url).then(response => {
                 console.log(response.body);
                 this.initTaiResult = response.body;
+            }, err => {
+
+            });
+        },
+        getAccounts: function () {
+            let url = this.get_host() + "/api/chain/getAccounts";
+            this.$http.get(url).then(response => {
+                console.log(response.body);
+                this.AccountsResult = response.body;
+            }, err => {
+
+            });
+        },
+        initGenesisJson: function () {
+            let url = this.get_host() + "/api/chain/initGenesis";
+            let postData = {
+                chainId: this.chainId,
+                period: this.period,
+                genesisAllocAccount: this.genesisAllocAccount
+            };
+            this.$http.post(url, JSON.stringify(postData)).then(response => {
+                this.initGenesisJsonResult = "initGenesisJsonResult:" + response.body;
             }, err => {
 
             });
@@ -48,11 +70,15 @@ var Main = {
                 return;
             }
             let url = this.get_host() + "/api/chain/startTai";
+            if (this.verbosity === "") {
+                this.verbosity = "0";
+            }
             let postData = {
                 unlockAccount: this.unlockAccount,
                 password: this.unlockAccountPassword,
                 port: this.port,
-                rpcPort: this.rpcPort
+                rpcPort: this.rpcPort,
+                verbosity: this.verbosity
             };
             this.$http.post(url, JSON.stringify(postData)).then(response => {
                 this.startTaiResult = "startTai:" + response.body;
@@ -246,12 +272,18 @@ var Main = {
             tableData: [],
             NewAccountPassword: "",
             NewAccountResult: "",
+            chainId: "",
+            period: "",
+            genesisAllocAccount: "",
+            initGenesisJsonResult: "",
             initTaiResult: "",
+            AccountsResult: "",
             genesisJsonResult: "",
             unlockAccount: "",
             unlockAccountPassword: "",
             port: "",
             rpcPort: "",
+            verbosity: "",
             getResult: "",
             startTaiResult: "",
             addResult: "",

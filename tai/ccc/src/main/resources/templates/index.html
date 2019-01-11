@@ -17,21 +17,31 @@
         {{ NewAccountResult }}
         <br><br>
 
+        <input v-model="chainId" placeholder="chainId">
+        <input v-model="period" placeholder="区块生成间隔时间(period)">
+        <input v-model="genesisAllocAccount" placeholder="创世节点地址">
+        <button v-on:click="initGenesisJson">initGenesisJson</button>
+        <p>{{ initGenesisJsonResult }}</p>
+        <br><br>
         <textarea v-model="genesisJson" placeholder="genesis.json"></textarea>
         <button v-on:click="addGenesisJson">addGenesisJson</button>
         <button v-on:click="delGenesisJson">delGenesisJson</button>
         <p>{{ genesisJsonResult }}</p>
-        <br><br>
+        <br>
 
 
         <button v-on:click="initTai">initTai</button>
         {{ initTaiResult }}
-        <br><br>
+        <br>
+        <button v-on:click="getAccounts">getAccounts</button>
+        <p> {{ AccountsResult }} </p>
+        <br>
 
         <input v-model="unlockAccount" placeholder="请输入账户地址">
         <input v-model="unlockAccountPassword" placeholder="请输入账户密码">
         <input v-model="port" placeholder="请输入端口">
         <input v-model="rpcPort" placeholder="请输入rpc端口">
+        <input v-model="verbosity" placeholder="日志级别, 默认为0">
         <button v-on:click="startTai">startTai</button>
         <button v-on:click="stopTai">stopTai</button>
         <p>{{ startTaiResult }}</p>

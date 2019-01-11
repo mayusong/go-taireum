@@ -1,5 +1,7 @@
 package com.taireum.ccc;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.thymeleaf.util.StringUtils;
 import org.web3j.crypto.CipherException;
@@ -44,7 +46,21 @@ public class CredentialsUtils {
         }
         return null;
     }
-
+    public static String getAllAccountAddress(String dataDir) {
+        if (StringUtils.isEmpty(dataDir)) {
+            return null;
+        }
+        JSONArray jsonArray = new JSONArray();
+        File keystorePath = new File(dataDir + "/keystore");
+        Collection<File> files = FileUtils.listFiles(keystorePath, null, false);
+        for (File file : files) {
+            String fileName = file.getName().toLowerCase();
+            int index = fileName.lastIndexOf("--");
+            String accountAddress = fileName.substring(index + 2);
+            jsonArray.add(accountAddress);
+        }
+        return jsonArray.toJSONString();
+    }
     public static Credentials getCredentials(String password, String accountPath) {
         try {
             if (StringUtils.isEmpty(password) || StringUtils.isEmpty(accountPath)) {

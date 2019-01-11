@@ -90,11 +90,13 @@ public class UnionController {
         String account = jsonObject.getString("account");
         try {
             TransactionReceipt transactionReceipt = ccc_sol_ccc.applyMember(companyName, email, remark, enode, account).send();
-            return String.valueOf(transactionReceipt.isStatusOK());
+            if (transactionReceipt.isStatusOK()) {
+                return "0";
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
+        return "-1";
     }
 
     @RequestMapping(value = "/api/Union/showCompanyNum", method = RequestMethod.GET)
@@ -168,35 +170,143 @@ public class UnionController {
 
     @RequestMapping(value = "/api/Union/VoteMember", method = RequestMethod.GET)
     private String voteMember(String fromid, String toid) {
-        return "";
+        if(StringUtils.isEmpty(fromid) || StringUtils.isEmpty(toid)) {
+            return "-1";
+        }
+        if (ccc_sol_ccc == null) {
+            return "-1";
+        }
+        try {
+            TransactionReceipt transactionReceipt = ccc_sol_ccc.VoteMember(new BigInteger(fromid), new BigInteger(toid)).send();
+            if (transactionReceipt.isStatusOK()) {
+                return  "0";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "-1";
     }
 
     @RequestMapping(value = "/api/Union/VoteMine", method = RequestMethod.GET)
     private String voteMine(String fromid, String toid) {
-        return "";
+        if(StringUtils.isEmpty(fromid) || StringUtils.isEmpty(toid)) {
+            return "-1";
+        }
+        if (ccc_sol_ccc == null) {
+            return "-1";
+        }
+        try {
+            TransactionReceipt transactionReceipt = ccc_sol_ccc.VoteMine(new BigInteger(fromid), new BigInteger(toid)).send();
+            if (transactionReceipt.isStatusOK()) {
+                return  "0";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "-1";
     }
 
     @RequestMapping(value = "/api/Union/UpdateCompany", method = RequestMethod.POST)
     private String updateCompany(@RequestBody String body) {
-        return "";
+        if (ccc_sol_ccc == null) {
+            return "-1";
+        }
+        JSONObject jsonObject = JSON.parseObject(body);
+        String companyId = jsonObject.getString("companyId");
+        String email = jsonObject.getString("email");
+        String remark = jsonObject.getString("remark");
+        String enode = jsonObject.getString("enode");
+        String stat = jsonObject.getString("stat");
+        try {
+            TransactionReceipt transactionReceipt = ccc_sol_ccc.UpdateCompany(new BigInteger(companyId), email, remark, enode, new BigInteger(stat)).send();
+            if (transactionReceipt.isStatusOK()) {
+                return "0";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "-1";
     }
     @RequestMapping(value = "/api/Union/ShowBallot", method = RequestMethod.GET)
     private String showBallot(String id) {
-        return "";
+        if(StringUtils.isEmpty(id) ) {
+            return "-1";
+        }
+        if (ccc_sol_ccc == null) {
+            return "-1";
+        }
+        try {
+            BigInteger num = ccc_sol_ccc.ShowBallot(new BigInteger(id)).send();
+            return String.valueOf(num);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "-1";
     }
 
     @RequestMapping(value = "/api/Union/ShowBallotMine", method = RequestMethod.GET)
     private String showBallotMine(String id) {
-        return "";
+        if(StringUtils.isEmpty(id) ) {
+            return "-1";
+        }
+        if (ccc_sol_ccc == null) {
+            return "-1";
+        }
+        try {
+            BigInteger num = ccc_sol_ccc.ShowBallotMine(new BigInteger(id)).send();
+            return String.valueOf(num);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "-1";
     }
 
     @RequestMapping(value = "/api/Union/isMember", method = RequestMethod.GET)
     private String isMember(String id) {
-        return "";
+        if(StringUtils.isEmpty(id) ) {
+            return "-1";
+        }
+        if (ccc_sol_ccc == null) {
+            return "-1";
+        }
+        try {
+            Boolean result = ccc_sol_ccc.isMember(new BigInteger(id)).send();
+            if (result) {
+                return "1";
+            } else {
+                return "0";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "-1";
     }
 
     @RequestMapping(value = "/api/Union/isMemberMine", method = RequestMethod.GET)
     private String isMemberMine(String id) {
-        return "";
+        if(StringUtils.isEmpty(id) ) {
+            return "-1";
+        }
+        if (ccc_sol_ccc == null) {
+            return "-1";
+        }
+        try {
+            Boolean result = ccc_sol_ccc.isMemberMine(new BigInteger(id)).send();
+            if (result) {
+                return "1";
+            } else {
+                return "0";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "-1";
     }
 }

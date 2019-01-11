@@ -23,4 +23,10 @@ public class CredentialsUtilsTest {
 //        System.out.println(credentials.getEcKeyPair().getPrivateKey().toString());
 //        System.out.println(credentials.getEcKeyPair().getPublicKey().toString());
     }
+
+    @Test
+    public void getAllAccountAddress() {
+        String accounts = CredentialsUtils.getAllAccountAddress("tai_data_dir");
+        System.out.println(accounts);
+    }
 }

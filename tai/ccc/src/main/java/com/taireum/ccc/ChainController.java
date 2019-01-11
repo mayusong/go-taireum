@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.thymeleaf.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,7 +39,9 @@ public class ChainController {
     
     @RequestMapping(value="/api/chain/addGenesis", method = RequestMethod.POST)
     public String addGenesis(@RequestBody String payload) {
-
+        if (StringUtils.isEmpty(payload)) {
+            return "-1";
+        }
         try {
             File path = new File("genesis.json");
             if (!path.exists()) {
@@ -55,9 +58,20 @@ public class ChainController {
         return "-1";
     }
 
-    @RequestMapping(value="/api/chain/addGenesis", method = RequestMethod.GET)
-    public String addGenesis() {
-        return "";
+    @RequestMapping(value="/api/chain/initGenesis", method = RequestMethod.POST)
+    public String initGenesis(@RequestBody String payload) {
+        if (StringUtils.isEmpty(payload)) {
+            return "-1";
+        }
+
+        JSONObject postData = JSON.parseObject(payload);
+        int chainId = postData.getIntValue("chainId");
+        int period = postData.getIntValue("period");
+        String genesisAllocAccount = postData.getString("genesisAllocAccount");
+
+        String genesisJson = GenesisUtils.initTaiGenesis(chainId, period, new String[]{genesisAllocAccount});
+
+        return addGenesis(genesisJson);
     }
 
     @RequestMapping(value="/api/chain/delGenesis", method = RequestMethod.GET)
@@ -101,6 +115,11 @@ public class ChainController {
         return "-1";
     }
 
+    @RequestMapping(value="/api/chain/getAccounts", method = RequestMethod.GET)
+    public String getAccounts() {
+        return CredentialsUtils.getAllAccountAddress("tai_data_dir");
+    }
+
     @RequestMapping(value="/api/chain/startTai", method = RequestMethod.POST)
     public String startTai(@RequestBody String body) {
 
@@ -134,6 +153,10 @@ public class ChainController {
         } else {
             isStartMine = false;
         }
+        String verbosity = "0";
+        if(map.containsKey("verbosity")) {
+            verbosity = map.get("verbosity").toString();
+        }
         String port = "30305";
         String rpcPort = "8555";
         if (map.containsKey("port")) {
@@ -147,12 +170,16 @@ public class ChainController {
         mRpcConfig.setAccount(unlockAccount);
         mRpcConfig.setPassword(password);
 
-        String networkid = "40602";
+        String networkid = GenesisUtils.getChainId();
+        if (networkid.equals("-1")) {
+            return "-1";
+        }
+
         String rpcapi = "\"db,debug,eth,net,web3,personal,shh,txpool,web3,admin\"";
 
         System.out.println(unlockAccount + " " + password);
 
-        String startCmds = "geth --verbosity 0 --datadir " + mDataDir + " --nodiscover --ipcdisable --networkid " + networkid + " --port "
+        String startCmds = "geth --verbosity " + verbosity + " --datadir " + mDataDir + " --nodiscover --ipcdisable --networkid " + networkid + " --port "
                 + port + " --rpc --rpccorsdomain \"*\" --rpcapi " + rpcapi + " --rpcport " + rpcPort;
         if (isStartMine) {
             startCmds += " --mine --unlock " + unlockAccount + " --password startTaiPassword --etherbase " + unlockAccount;
