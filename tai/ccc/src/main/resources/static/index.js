@@ -262,8 +262,17 @@ var Main = {
         ShowAllCompany: function () {
             this.updateTableData();
         },
-        handleClick: function (row) {
-            console.log(row);
+        voteMember: function () {
+        },
+        voteMine: function () {
+        },
+        showBallot: function () {
+        },
+        showBallotMine: function () {
+        },
+        isMember: function () {
+        },
+        isMemberMine: function () {
         }
     },
     data: function () {
@@ -305,7 +314,12 @@ var Main = {
             enode2: "",
             account2: "",
             applyResult: "",
-            showCompanyNumResult: ""
+            showCompanyNumResult: "",
+            fromID:"",
+            toID:"",
+            voteResult:"",
+            companyId:"",
+            ballotNumResult:""
         };
     }
 };
