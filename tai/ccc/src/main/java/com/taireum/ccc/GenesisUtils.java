@@ -26,7 +26,7 @@ public class GenesisUtils {
           "nonce": "0x0",
           "timestamp": "0x5bf3b3ef",
           "extraData": "0x",
-          "gasLimit": "0x47b760",
+          "gasLimit": "0xffffffff",
           "difficulty": "0x1",
           "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
           "coinbase": "0x0000000000000000000000000000000000000000",
@@ -66,7 +66,7 @@ public class GenesisUtils {
         String timestamp = "0x" + Integer.toHexString((int)(System.currentTimeMillis() / 1000)).toLowerCase();
         jsonGenesis.put("timestamp", timestamp);
         jsonGenesis.put("extraData", "0x");
-        jsonGenesis.put("gasLimit", "0x47b760");
+        jsonGenesis.put("gasLimit", "0xffffffff");
         jsonGenesis.put("difficulty", "0x1");
         jsonGenesis.put("mixHash", "0x0000000000000000000000000000000000000000000000000000000000000000");
         jsonGenesis.put("coinbase", "0x0000000000000000000000000000000000000000");

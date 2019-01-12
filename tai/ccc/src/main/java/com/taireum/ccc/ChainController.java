@@ -179,8 +179,8 @@ public class ChainController {
 
         System.out.println(unlockAccount + " " + password);
 
-        String startCmds = "geth --verbosity " + verbosity + " --datadir " + mDataDir + " --nodiscover --ipcdisable --networkid " + networkid + " --port "
-                + port + " --rpc --rpccorsdomain \"*\" --rpcapi " + rpcapi + " --rpcport " + rpcPort;
+        String startCmds = "geth --debug --verbosity " + verbosity + " --datadir " + mDataDir + " --nodiscover --ipcdisable --networkid " + networkid + " --port "
+                + port + " --rpc --rpccorsdomain \"*\" --rpcapi " + rpcapi + " --rpcport " + rpcPort + " --miner.gastarget 4294967295";
         if (isStartMine) {
             startCmds += " --mine --unlock " + unlockAccount + " --password startTaiPassword --etherbase " + unlockAccount;
         }

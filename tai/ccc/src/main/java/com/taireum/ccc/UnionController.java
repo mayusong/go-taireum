@@ -3,6 +3,7 @@ package com.taireum.ccc;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.taireum.CCC.CCCGasProvider;
 import com.taireum.CCC.CCC_sol_CCC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

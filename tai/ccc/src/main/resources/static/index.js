@@ -263,16 +263,52 @@ var Main = {
             this.updateTableData();
         },
         voteMember: function () {
+            let url = this.get_host() + "/api/Union/VoteMember?fromid=" + this.fromID + "&toid=" + this.toID;
+            this.$http.get(url).then(res => {
+                this.voteResult = "voteMember:" + res.bodyText;
+            }, err => {
+
+            });
         },
         voteMine: function () {
+            let url = this.get_host() + "/api/Union/VoteMine?fromid=" + this.fromID + "&toid=" + this.toID;
+            this.$http.get(url).then(res => {
+                this.voteResult = "voteMine:" + res.bodyText;
+            }, err => {
+
+            });
         },
         showBallot: function () {
+            let url = this.get_host() + "/api/Union/ShowBallot?id=" + this.companyId;
+            this.$http.get(url).then(res => {
+                this.ballotNumResult = "showBallot:" + res.bodyText;
+            }, err => {
+
+            });
         },
         showBallotMine: function () {
+            let url = this.get_host() + "/api/Union/ShowBallotMine?id=" + this.companyId;
+            this.$http.get(url).then(res => {
+                this.ballotNumResult = "showBallotMine:" + res.bodyText;
+            }, err => {
+
+            });
         },
         isMember: function () {
+            let url = this.get_host() + "/api/Union/isMember?id=" + this.companyId;
+            this.$http.get(url).then(res => {
+                this.ballotNumResult = "isMember:" + res.bodyText;
+            }, err => {
+
+            });
         },
         isMemberMine: function () {
+            let url = this.get_host() + "/api/Union/isMemberMine?id=" + this.companyId;
+            this.$http.get(url).then(res => {
+                this.ballotNumResult = "isMemberMine:" + res.bodyText;
+            }, err => {
+
+            });
         }
     },
     data: function () {
