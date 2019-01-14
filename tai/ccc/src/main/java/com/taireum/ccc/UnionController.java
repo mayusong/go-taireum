@@ -16,7 +16,11 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tuples.generated.Tuple6;
+import org.web3j.tx.Transfer;
 import org.web3j.tx.gas.DefaultGasProvider;
+import org.web3j.utils.Convert;
+
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 @RestController
@@ -308,6 +312,23 @@ public class UnionController {
             e.printStackTrace();
         }
 
+        return "-1";
+    }
+
+    @RequestMapping(value = "/api/Union/transfer", method = RequestMethod.GET)
+    private String transfer(String toAccount, String amount) {
+        if (StringUtils.isEmpty(toAccount) || StringUtils.isEmpty(amount)) {
+            return "-1";
+        }
+
+        try {
+            TransactionReceipt transactionReceipt = Transfer.sendFunds(
+                    getWeb3jInstance(), getCredentials(), toAccount,
+                    BigDecimal.valueOf(Long.parseLong(amount)), Convert.Unit.ETHER).send();
+            return String.valueOf(transactionReceipt.getTransactionHash());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return "-1";
     }
 }

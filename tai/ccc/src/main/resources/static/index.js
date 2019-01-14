@@ -309,6 +309,14 @@ var Main = {
             }, err => {
 
             });
+        },
+        transfer: function () {
+            let url = this.get_host() + "/api/Union/transfer?toAccount=" + this.transferToAccount + "&amount=" + this.transferAmount;
+            this.$http.get(url).then(res => {
+                this.transferResult = "transfer:" + res.bodyText;
+            }, err => {
+
+            });
         }
     },
     data: function () {
@@ -355,7 +363,10 @@ var Main = {
             toID:"",
             voteResult:"",
             companyId:"",
-            ballotNumResult:""
+            ballotNumResult:"",
+            transferToAccount:"",
+            transferAmount:"",
+            transferResult:""
         };
     }
 };

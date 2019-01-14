@@ -97,6 +97,13 @@
     <p>{{ applyResult }}</p>
     <br>
 
+    <input v-model="transferToAccount" placeholder="给该账户转账">
+    <input v-model="transferAmount" placeholder="转账金额(ether)">
+    <button v-on:click="transfer">转账</button>
+    <p>{{ transferResult }}</p>
+    <br>
+
+
     <button v-on:click="showCompanyNum">获取公司个数</button>
     <p>{{ showCompanyNumResult }}</p>
     <br><br>
