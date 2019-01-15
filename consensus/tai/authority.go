@@ -73,6 +73,9 @@ func (a *Authority) signers() []common.Address {
 //TODO what happend when add a new singer. snapshot？ no
 func (a *Authority) hostturn(number uint64, signer common.Address) bool {
 	signers, offset := a.signers(), 0
+	if len(signers) == 0 {
+		return false
+	}
 	for offset < len(signers) && signers[offset] != signer {
 		offset++
 	}
