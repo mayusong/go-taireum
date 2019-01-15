@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
-public class CredentialsUtils {
+public class CredentialsUtil {
 
     public static boolean checkValidAccount(String dataDir, String unlockAccount) {
         if (unlockAccount.toLowerCase().startsWith("0x")) {

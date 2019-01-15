@@ -8,7 +8,7 @@ import org.thymeleaf.util.StringUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class GenesisUtils {
+public class GenesisUtil {
     /*
         {
           "config": {

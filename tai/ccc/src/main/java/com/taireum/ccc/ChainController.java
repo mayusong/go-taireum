@@ -69,7 +69,7 @@ public class ChainController {
         int period = postData.getIntValue("period");
         String genesisAllocAccount = postData.getString("genesisAllocAccount");
 
-        String genesisJson = GenesisUtils.initTaiGenesis(chainId, period, new String[]{genesisAllocAccount});
+        String genesisJson = GenesisUtil.initTaiGenesis(chainId, period, new String[]{genesisAllocAccount});
 
         return addGenesis(genesisJson);
     }
@@ -117,7 +117,7 @@ public class ChainController {
 
     @RequestMapping(value="/api/chain/getAccounts", method = RequestMethod.GET)
     public String getAccounts() {
-        return CredentialsUtils.getAllAccountAddress("tai_data_dir");
+        return CredentialsUtil.getAllAccountAddress("tai_data_dir");
     }
 
     @RequestMapping(value="/api/chain/startTai", method = RequestMethod.POST)
@@ -135,7 +135,7 @@ public class ChainController {
                 unlockAccount = "0x" + unlockAccount;
             }
 
-            if (!CredentialsUtils.checkValidAccount(mDataDir, unlockAccount)) {
+            if (!CredentialsUtil.checkValidAccount(mDataDir, unlockAccount)) {
                 return "-1";
             }
 
@@ -170,7 +170,7 @@ public class ChainController {
         mRpcConfig.setAccount(unlockAccount);
         mRpcConfig.setPassword(password);
 
-        String networkid = GenesisUtils.getChainId();
+        String networkid = GenesisUtil.getChainId();
         if (networkid.equals("-1")) {
             return "-1";
         }

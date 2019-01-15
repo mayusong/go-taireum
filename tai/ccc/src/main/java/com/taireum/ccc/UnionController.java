@@ -3,8 +3,8 @@ package com.taireum.ccc;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.taireum.CCC.CCCGasProvider;
 import com.taireum.CCC.CCC_sol_CCC;
+import io.reactivex.disposables.Disposable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.thymeleaf.util.StringUtils;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tuples.generated.Tuple6;
@@ -31,6 +33,8 @@ public class UnionController {
     private static Credentials mCredentials = null;
     private String mDataDir = "tai_data_dir";
     private CCC_sol_CCC ccc_sol_ccc = null;
+    private EthFilter ethFilter = null;
+    private Disposable disposable = null;
 
     private Web3j getWeb3jInstance() {
         if (mWeb3j == null) {
@@ -43,10 +47,38 @@ public class UnionController {
 
     private Credentials getCredentials() {
         if (mCredentials == null) {
-            String accountPath = CredentialsUtils.getAccountFilePath(mDataDir, mRpcConfig.getAccount());
-            mCredentials = CredentialsUtils.getCredentials(mRpcConfig.getPassword(), accountPath);
+            String accountPath = CredentialsUtil.getAccountFilePath(mDataDir, mRpcConfig.getAccount());
+            mCredentials = CredentialsUtil.getCredentials(mRpcConfig.getPassword(), accountPath);
         }
         return  mCredentials;
+    }
+
+    private void subscribeCCCEvent(String contractAddress) {
+        if (disposable != null) {
+            if (!disposable.isDisposed()) {
+                disposable.dispose();
+            }
+        }
+
+        EthFilter ethFilter = new EthFilter(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST, contractAddress);
+
+        disposable = ccc_sol_ccc.eventCCCEventFlowable(ethFilter).subscribe(eventCCCEventResponse -> {
+            System.out.println("type:" + eventCCCEventResponse.EventType + " enode:" + eventCCCEventResponse._toEnode + " addr:" + eventCCCEventResponse._toAddress);
+            switch (eventCCCEventResponse.EventType.intValue()) {
+                case 1: //VoteMember
+                {
+                    //eventCCCEventResponse._toEnode
+                    CCCJsonUtil.AppendToJsonArray(CCCJsonUtil.enodeJsonPath, eventCCCEventResponse._toEnode);
+                    break;
+                }
+                case 2:{ //VoteMine
+                    CCCJsonUtil.AppendToJsonArray(CCCJsonUtil.minerJsonPath, eventCCCEventResponse._toAddress);
+                    break;
+                }
+            }
+
+        });
+
     }
 
     @RequestMapping(value = "/api/Union/deployCCC", method = RequestMethod.POST)
@@ -63,7 +95,11 @@ public class UnionController {
 
         try {
             ccc_sol_ccc = CCC_sol_CCC.deploy(getWeb3jInstance(), getCredentials(), new DefaultGasProvider(), companyName, email, remark, enode).send();
-            return ccc_sol_ccc.getContractAddress();
+            String contractAddress = ccc_sol_ccc.getContractAddress();
+
+            subscribeCCCEvent(contractAddress);
+
+            return contractAddress;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,6 +115,7 @@ public class UnionController {
         JSONObject jsonObject = JSON.parseObject(body);
         String contractAddress = jsonObject.getString("contractAddress");
         ccc_sol_ccc = CCC_sol_CCC.load(contractAddress, getWeb3jInstance(), getCredentials(), new DefaultGasProvider());
+        subscribeCCCEvent(contractAddress);
         return ccc_sol_ccc.getContractAddress();
     }
 
