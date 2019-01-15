@@ -1,6 +1,5 @@
 package tai
 
-import "github.com/ethereum/go-ethereum/log"
 
 var EnodeConfigUrl = "" //"http://localhost:8080/api/getEnode"
 var RpcConfigUrl = "" //"http://localhost:8080/api/getRpc"
@@ -18,7 +17,6 @@ func GetEnodeConfigUrl() string {
 			}
 		}
 	}
-	log.Error(EnodeConfigUrl)
 	return EnodeConfigUrl
 }
 func GetRpcConfigUrl() string {
@@ -31,7 +29,6 @@ func GetRpcConfigUrl() string {
 			}
 		}
 	}
-	log.Error(RpcConfigUrl)
 	return RpcConfigUrl
 }
 
@@ -45,7 +42,6 @@ func GetAuthoritiesConfigUrl() string {
 			}
 		}
 	}
-	log.Error(AuthoritiesConfigUrl)
 	return AuthoritiesConfigUrl
 }
 
@@ -59,6 +55,5 @@ func GetContractConfigUrl() string {
 			}
 		}
 	}
-	log.Error(ContractConfigUrl)
 	return ContractConfigUrl
 }
