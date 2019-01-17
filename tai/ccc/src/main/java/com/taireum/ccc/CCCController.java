@@ -1,7 +1,5 @@
 package com.taireum.ccc;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,35 +16,22 @@ public class CCCController {
     private String minerJson = "";
     private String enodeJson = "";
     private String contractJson = "";
-    private final static String minerJsonPath = "miner.json";
-    private final static String enodeJsonPath = "enode.json";
-    private final static String contractJsonPath = "contract.json";
 
 
     @RequestMapping("/api/getMiner")
     public String getMiner() {
-//        if (!StringUtils.isEmpty(minerJson)) {
-//            return minerJson;
-//        }
         minerJson = CCCJsonUtil.getJson(CCCJsonUtil.minerJsonPath);
         return minerJson;
     }
 
     @RequestMapping("/api/getEnode")
     public String getEnode() {
-//        if (!StringUtils.isEmpty(enodeJson)) {
-//            return enodeJson;
-//        }
         enodeJson = CCCJsonUtil.getJson(CCCJsonUtil.enodeJsonPath);
         return enodeJson;
     }
 
     @RequestMapping("/api/getContract")
     public String getContract() {
-
-//        if (!StringUtils.isEmpty(contractJson)) {
-//            return contractJson;
-//        }
         contractJson = CCCJsonUtil.getJson(CCCJsonUtil.contractJsonPath);
         return contractJson;
     }

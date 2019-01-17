@@ -34,7 +34,6 @@ public class UnionController {
     private static Credentials mCredentials = null;
     private String mDataDir = "tai_data_dir";
     private CCC_sol_CCC ccc_sol_ccc = null;
-    private EthFilter ethFilter = null;
     private Disposable disposable = null;
 
     private Web3j getWeb3jInstance() {
