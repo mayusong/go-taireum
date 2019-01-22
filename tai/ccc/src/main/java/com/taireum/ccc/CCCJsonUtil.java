@@ -14,7 +14,6 @@ public class CCCJsonUtil {
     public final static String contractJsonPath = "contract.json";
 
     public static String AppendToJsonArray(String fileName, String value) {
-        System.out.println("AppendToJsonArray:" + fileName + " " + value);
         try {
             File file = new File(fileName);
             String minerJson = "";

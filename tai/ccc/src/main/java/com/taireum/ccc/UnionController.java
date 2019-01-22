@@ -76,9 +76,18 @@ public class UnionController {
                     break;
                 }
             }
-
         });
-
+    }
+    @RequestMapping(value = "/api/Union/disposableEvent", method = RequestMethod.GET)
+    private String disposableEvent() {
+        if (disposable != null) {
+            if (!disposable.isDisposed()) {
+                disposable.dispose();
+                System.out.println("disposable.dispose()");
+                return "0";
+            }
+        }
+        return "1";
     }
 
     @RequestMapping(value = "/api/Union/deployCCC", method = RequestMethod.POST)

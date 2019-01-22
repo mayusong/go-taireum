@@ -8,12 +8,15 @@ import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteResultHandler;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.util.StringUtils;
 
 import java.io.BufferedReader;
@@ -21,6 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import static com.taireum.ccc.CCCController.initConfigJson;
 
@@ -36,8 +42,8 @@ public class ChainController {
     private String mDataDir = "tai_data_dir";
 
     private DaemonExecutor mDaemonExecutor = null;
-    
-    @RequestMapping(value="/api/chain/addGenesis", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/api/chain/addGenesis", method = RequestMethod.POST)
     public String addGenesis(@RequestBody String payload) {
         if (StringUtils.isEmpty(payload)) {
             return "-1";
@@ -58,7 +64,7 @@ public class ChainController {
         return "-1";
     }
 
-    @RequestMapping(value="/api/chain/initGenesis", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/chain/initGenesis", method = RequestMethod.POST)
     public String initGenesis(@RequestBody String payload) {
         if (StringUtils.isEmpty(payload)) {
             return "-1";
@@ -74,7 +80,7 @@ public class ChainController {
         return addGenesis(genesisJson);
     }
 
-    @RequestMapping(value="/api/chain/delGenesis", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/chain/delGenesis", method = RequestMethod.GET)
     public String delGenesis() {
         File path = new File("genesis.json");
         if (path.isFile() && path.exists()) {
@@ -85,7 +91,7 @@ public class ChainController {
         return "1";
     }
 
-    @RequestMapping(value="/api/chain/initTai", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/chain/initTai", method = RequestMethod.GET)
     public String initTai() {
 
         String local_host = InetAddress.getLoopbackAddress().getHostAddress();
@@ -115,12 +121,12 @@ public class ChainController {
         return "-1";
     }
 
-    @RequestMapping(value="/api/chain/getAccounts", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/chain/getAccounts", method = RequestMethod.GET)
     public String getAccounts() {
         return CredentialsUtil.getAllAccountAddress("tai_data_dir");
     }
 
-    @RequestMapping(value="/api/chain/startTai", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/chain/startTai", method = RequestMethod.POST)
     public String startTai(@RequestBody String body) {
 
         File pwdPath = new File("startTaiPassword");
@@ -154,7 +160,7 @@ public class ChainController {
             isStartMine = false;
         }
         String verbosity = "0";
-        if(map.containsKey("verbosity")) {
+        if (map.containsKey("verbosity")) {
             verbosity = map.get("verbosity").toString();
         }
         String port = "30305";
@@ -193,13 +199,13 @@ public class ChainController {
                 CommandLine commandLine = CommandLine.parse(startCmds);
                 mDaemonExecutor = new DaemonExecutor();
                 mDaemonExecutor.setWatchdog(new ExecuteWatchdog(-1));
-                mDaemonExecutor.execute(commandLine, new ExecuteResultHandler(){
-                
+                mDaemonExecutor.execute(commandLine, new ExecuteResultHandler() {
+
                     @Override
                     public void onProcessFailed(ExecuteException e) {
                         System.out.println("onProcessFailed");
                     }
-                
+
                     @Override
                     public void onProcessComplete(int exitValue) {
                         System.out.println("onProcessComplete");
@@ -214,9 +220,17 @@ public class ChainController {
         return result;
     }
 
-    @RequestMapping(value="/api/chain/stopTai", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/chain/stopTai", method = RequestMethod.GET)
     public String stopTai() {
         if (mDaemonExecutor != null) {
+            String local_host = InetAddress.getLoopbackAddress().getHostAddress();
+            String local_host_port = environment.getProperty("local.server.port");
+            String host = "http://" + local_host + ":" + local_host_port;
+            String url = host + "/api/Union/disposableEvent";
+            RestTemplate restTemplate=new RestTemplate();
+            System.out.println(url);
+            String resultGet = restTemplate.getForObject(url, String.class);
+
             mDaemonExecutor.getWatchdog().destroyProcess();
             mDaemonExecutor = null;
             return "0";
@@ -225,7 +239,7 @@ public class ChainController {
         }
     }
 
-    @RequestMapping(value="/api/chain/newAccount", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/chain/newAccount", method = RequestMethod.POST)
     public String newAccount(@RequestBody String body) {
         try {
             JSONObject map = JSON.parseObject(body);
@@ -259,7 +273,7 @@ public class ChainController {
                     int start = result.indexOf("{");
                     int end = result.indexOf("}");
                     result = result.substring(start + 1, end);
-                    return "{\"Address\":\"" + result + "\"}";
+                    return result;
                 }
 
             }
@@ -268,5 +282,144 @@ public class ChainController {
         }
 
         return "";
+    }
+
+    @RequestMapping(value = "/api/chain/initAllInOne", method = RequestMethod.POST)
+    public String initAllInOne(@RequestBody String body) {
+
+        //newAccount
+        //initGenesis
+        //initTai
+        //addMiner
+        //startTai
+        //getOwnenode
+        //addEnode
+        //deployCCCContract
+        //addContract
+        //return
+
+        Map<String, String> resultMap = new HashMap<>();
+
+        try {
+            if (StringUtils.isEmpty(body)) {
+                resultMap.put("status", "-1");
+                throw new Exception("body is empty");
+            }
+            JSONObject mapBody = JSON.parseObject(body);
+            if (! (mapBody.containsKey("companyName") && mapBody.containsKey("email"))) {
+                resultMap.put("status", "-1");
+                throw new Exception("company info is empty");
+            }
+
+            String companyName = mapBody.getString("companyName");
+            String email = mapBody.getString("email");
+            String remark = "";
+            if (mapBody.containsKey("remark")) {
+                remark = mapBody.getString("remark");
+            }
+
+            String local_host = InetAddress.getLoopbackAddress().getHostAddress();
+            String local_host_port = environment.getProperty("local.server.port");
+            String host = "http://" + local_host + ":" + local_host_port;
+
+            String url = host + "/api/chain/newAccount";
+            String password = RandomStringUtils.randomAlphabetic(16);
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("password", password);
+            HttpHeaders headers = new HttpHeaders();
+            MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+            headers.setContentType(type);
+            headers.add("Accept", MediaType.APPLICATION_JSON.toString());
+            HttpEntity<String> entity = new HttpEntity<String>(JSON.toJSONString(map),headers);
+
+            RestTemplate restTemplate=new RestTemplate();
+            ResponseEntity<String> result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            String account = result.getBody();
+            if (StringUtils.isEmpty(account)) {
+                resultMap.put("status", "-1");
+                throw new Exception("newAccount error");
+            }
+
+            resultMap.put("status", "1");
+            resultMap.put("account", account);
+            resultMap.put("password", "0x" + password);
+
+
+            url = host + "/api/chain/initGenesis";
+            map.clear();
+            //chainId period genesisAllocAccount
+            int chainId = new Random().nextInt(10000) + 20000;
+            map.put("chainId", chainId);
+            map.put("period", 15);
+            map.put("genesisAllocAccount", account);
+
+            entity = new HttpEntity<String>(JSON.toJSONString(map),headers);
+            result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            System.out.println(result.getBody());
+            resultMap.put("status", "2");
+
+            url = host + "/api/chain/initTai";
+            String resultGet = restTemplate.getForObject(url, String.class);
+            System.out.println(resultGet);
+            resultMap.put("status", "3");
+
+            url = host + "/api/addMiner";
+            entity = new HttpEntity<String>("0x" + account, headers);
+            result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            System.out.println(result.getBody());
+            resultMap.put("status", "4");
+
+
+            url = host + "/api/chain/startTai";
+            map.clear();
+            map.put("unlockAccount", "0x" + account);
+            map.put("password", password);
+            map.put("port", "30305");
+            map.put("rpcPort", "8545");
+            map.put("verbosity", "0");
+            entity = new HttpEntity<String>(JSON.toJSONString(map),headers);
+            result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            System.out.println(result.getBody());
+            resultMap.put("status", "5");
+
+            url = host + "/api/admin/getOwnenode";
+            resultGet = restTemplate.getForObject(url, String.class);
+            if (StringUtils.isEmpty(resultGet)) {
+                throw new Exception("getOwnenode error");
+            }
+            String enode = resultGet;
+            resultMap.put("enode", enode);
+            resultMap.put("status", "6");
+
+            url = host + "/api/addEnode";
+            entity = new HttpEntity<String>(enode, headers);
+            result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            System.out.println(result.getBody());
+            resultMap.put("status", "7");
+
+            url = host + "/api/Union/deployCCC";
+            map.clear();
+            map.put("companyName", companyName);
+            map.put("email", email);
+            map.put("remark", remark);
+            map.put("enode", enode);
+
+            entity = new HttpEntity<String>(JSON.toJSONString(map), headers);
+            result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            String contractAddress = result.getBody();
+            System.out.println(contractAddress);
+            resultMap.put("status", "8");
+            resultMap.put("contractAddress", contractAddress);
+
+            url = host + "/api/addContract";
+            entity = new HttpEntity<String>(contractAddress, headers);
+            result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            resultMap.put("status", "0");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return JSON.toJSONString(resultMap);
+        }
     }
 }

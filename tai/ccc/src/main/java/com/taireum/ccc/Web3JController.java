@@ -17,6 +17,7 @@ public class Web3JController {
     @Autowired
     private RpcConfig mRpcConfig;
     private static JsonRpc2_0Tai tai = null;
+
     private JsonRpc2_0Tai getTaiInstance() {
         if (tai == null) {
             String mRpcAddr = "http://" + mRpcConfig.getRpcAddr() + ":" + mRpcConfig.getRpcPort();
@@ -25,7 +26,7 @@ public class Web3JController {
         return tai;
     }
 
-    @RequestMapping(value="/api/admin/addPeer", method=RequestMethod.POST)
+    @RequestMapping(value = "/api/admin/addPeer", method = RequestMethod.POST)
     public String addPeer(@RequestBody String body) {
         try {
             AdminAddPeer adminAddPeer = getTaiInstance().addPeer(body).send();
@@ -36,7 +37,7 @@ public class Web3JController {
         return "";
     }
 
-    @RequestMapping(value="/api/admin/getOwnenode", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/admin/getOwnenode", method = RequestMethod.GET)
     public String getOwnenode() {
         try {
             AdminNodeInfo adminNodeInfo = getTaiInstance().getNodeInfo().send();
