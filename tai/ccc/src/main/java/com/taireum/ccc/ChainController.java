@@ -228,7 +228,6 @@ public class ChainController {
             String host = "http://" + local_host + ":" + local_host_port;
             String url = host + "/api/Union/disposableEvent";
             RestTemplate restTemplate=new RestTemplate();
-            System.out.println(url);
             String resultGet = restTemplate.getForObject(url, String.class);
 
             mDaemonExecutor.getWatchdog().destroyProcess();
@@ -374,13 +373,15 @@ public class ChainController {
             map.clear();
             map.put("unlockAccount", "0x" + account);
             map.put("password", password);
-            map.put("port", "30305");
-            map.put("rpcPort", "8545");
+            map.put("port", "30345");
+            map.put("rpcPort", "8567");
             map.put("verbosity", "0");
             entity = new HttpEntity<String>(JSON.toJSONString(map),headers);
             result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
             System.out.println(result.getBody());
             resultMap.put("status", "5");
+
+            Thread.sleep(1000);
 
             url = host + "/api/admin/getOwnenode";
             resultGet = restTemplate.getForObject(url, String.class);
@@ -421,5 +422,145 @@ public class ChainController {
         } finally {
             return JSON.toJSONString(resultMap);
         }
+    }
+
+    @RequestMapping(value = "/api/chain/initMemberAllInOne", method = RequestMethod.POST)
+    public String initMemberAllInOne(@RequestBody String body) {
+        //newAccount
+        //addGenesis
+        //initTai
+        //addMiner
+        //addEnode
+        //addContract
+
+        //startTai
+        //getOwnenode
+        //addEnode
+        //addPeer
+        //loadCCC
+        //return
+        Map<String, String> resultMap = new HashMap<>();
+        try {
+            if (StringUtils.isEmpty(body)) {
+                resultMap.put("status", "-1");
+                throw new Exception("body is empty");
+            }
+            JSONObject mapBody = JSON.parseObject(body);
+            if (! (mapBody.containsKey("genesisJson") && mapBody.containsKey("creator_account")
+                    && mapBody.containsKey("creator_enode") && mapBody.containsKey("contract_address"))) {
+                resultMap.put("status", "-1");
+                throw new Exception("some parameter is empty");
+            }
+
+            String genesisJson = mapBody.getString("genesisJson");
+            String creator_account = mapBody.getString("creator_account");
+            String creator_enode = mapBody.getString("creator_enode");
+            String contract_address = mapBody.getString("contract_address");
+
+            String local_host = InetAddress.getLoopbackAddress().getHostAddress();
+            String local_host_port = environment.getProperty("local.server.port");
+            String host = "http://" + local_host + ":" + local_host_port;
+
+            String url = host + "/api/chain/newAccount";
+            String password = RandomStringUtils.randomAlphabetic(16);
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("password", password);
+            HttpHeaders headers = new HttpHeaders();
+            MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+            headers.setContentType(type);
+            headers.add("Accept", MediaType.APPLICATION_JSON.toString());
+            HttpEntity<String> entity = new HttpEntity<String>(JSON.toJSONString(map),headers);
+
+            RestTemplate restTemplate=new RestTemplate();
+            ResponseEntity<String> result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            String account = result.getBody();
+            if (StringUtils.isEmpty(account)) {
+                resultMap.put("status", "-1");
+                throw new Exception("newAccount error");
+            }
+
+            resultMap.put("status", "1");
+            resultMap.put("account", account);
+            resultMap.put("password", "0x" + password);
+
+            url = host + "/api/chain/addGenesis";
+            entity = new HttpEntity<String>(genesisJson,headers);
+            result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            System.out.println(result.getBody());
+            resultMap.put("status", "2");
+
+            url = host + "/api/chain/initTai";
+            String resultGet = restTemplate.getForObject(url, String.class);
+            System.out.println(resultGet);
+            resultMap.put("status", "3");
+
+            url = host + "/api/addMiner";
+            entity = new HttpEntity<String>(creator_account, headers);
+            result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            System.out.println(result.getBody());
+            resultMap.put("status", "4");
+
+            url = host + "/api/addEnode";
+            entity = new HttpEntity<String>(creator_enode, headers);
+            result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            System.out.println(result.getBody());
+            resultMap.put("status", "5");
+
+            url = host + "/api/addContract";
+            entity = new HttpEntity<String>(contract_address, headers);
+            result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            System.out.println(result.getBody());
+            resultMap.put("status", "6");
+
+            url = host + "/api/chain/startTai";
+            map.clear();
+            map.put("unlockAccount", "0x" + account);
+            map.put("password", password);
+            map.put("port", "30345");
+            map.put("rpcPort", "8567");
+            map.put("verbosity", "0");
+            entity = new HttpEntity<String>(JSON.toJSONString(map),headers);
+            result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            System.out.println(result.getBody());
+            resultMap.put("status", "7");
+
+            url = host + "/api/admin/getOwnenode";
+            resultGet = restTemplate.getForObject(url, String.class);
+            if (StringUtils.isEmpty(resultGet)) {
+                throw new Exception("getOwnenode error");
+            }
+            String enode = resultGet;
+            resultMap.put("enode", enode);
+            resultMap.put("status", "8");
+
+            url = host + "/api/addEnode";
+            entity = new HttpEntity<String>(enode, headers);
+            result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            System.out.println(result.getBody());
+            resultMap.put("status", "9");
+
+            url = host + "/api/admin/addPeer";
+            entity = new HttpEntity<String>(creator_enode, headers);
+            result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            System.out.println(result.getBody());
+            resultMap.put("status", "10");
+
+            map.clear();
+            map.put("contractAddress", contract_address);
+            url = host + "/api/Union/loadCCC";
+            entity = new HttpEntity<String>(JSON.toJSONString(map), headers);
+            result = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            String contractAddress = result.getBody();
+            System.out.println(contractAddress);
+            resultMap.put("status", "0");
+            resultMap.put("contractAddress", contractAddress);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return JSON.toJSONString(resultMap);
+        }
+
+
     }
 }

@@ -3,6 +3,7 @@ package com.taireum.ccc;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.taireum.CCC.CCCGasProvider;
 import com.taireum.CCC.CCC_sol_CCC;
 import io.reactivex.disposables.Disposable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +104,7 @@ public class UnionController {
         String enode = jsonObject.getString("enode");
 
         try {
-            ccc_sol_ccc = CCC_sol_CCC.deploy(getWeb3jInstance(), getCredentials(), new DefaultGasProvider(), companyName, email, remark, enode).send();
+            ccc_sol_ccc = CCC_sol_CCC.deploy(getWeb3jInstance(), getCredentials(), new CCCGasProvider(), companyName, email, remark, enode).send();
             String contractAddress = ccc_sol_ccc.getContractAddress();
 
             subscribeCCCEvent(contractAddress);
@@ -123,7 +124,7 @@ public class UnionController {
         }
         JSONObject jsonObject = JSON.parseObject(body);
         String contractAddress = jsonObject.getString("contractAddress");
-        ccc_sol_ccc = CCC_sol_CCC.load(contractAddress, getWeb3jInstance(), getCredentials(), new DefaultGasProvider());
+        ccc_sol_ccc = CCC_sol_CCC.load(contractAddress, getWeb3jInstance(), getCredentials(), new CCCGasProvider());
         subscribeCCCEvent(contractAddress);
         return ccc_sol_ccc.getContractAddress();
     }

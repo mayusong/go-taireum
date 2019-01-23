@@ -11,27 +11,28 @@
 <body>
 
 <div id="creator">
+    <h1>创始者</h1>
     <input v-model="companyName" placeholder="公司名">
     <input v-model="email" placeholder="邮箱">
     <input v-model="remark" placeholder="备注">
     <button v-on:click="initAllInOne">一键创建创始节点</button>
+    <button v-on:click="downloadConfig">下载配置文件</button>
     <p>{{ AllInOneResult }}</p>
-    
-    <br>
-    <input v-model="companyName2" placeholder="公司名">
-    <input v-model="email2" placeholder="邮箱">
-    <input v-model="remark2" placeholder="备注">
-    <input v-model="enode2" placeholder="enode">
-    <input v-model="account2" placeholder="账户地址">
-    <button v-on:click="applyMember">增加成员</button>
-    <p>{{ applyResult }}</p>
-    <br>
+
+    <!--<br>-->
+    <!--<input v-model="companyName2" placeholder="公司名">-->
+    <!--<input v-model="email2" placeholder="邮箱">-->
+    <!--<input v-model="remark2" placeholder="备注">-->
+    <!--<input v-model="enode2" placeholder="enode">-->
+    <!--<input v-model="account2" placeholder="账户地址">-->
+    <!--<button v-on:click="applyMember">增加成员</button>-->
+    <!--<p>{{ applyResult }}</p>-->
+    <!--<br>-->
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
 <script src="creator.js"></script>
-
 </body>
 </html>

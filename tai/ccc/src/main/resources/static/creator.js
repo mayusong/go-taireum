@@ -15,6 +15,9 @@ let Creator = {
             }, err => {
 
             });
+        },
+        downloadConfig: function () {
+            window.open("http://127.0.0.1:8080/miner.json")
         }
     },
     data: function () {

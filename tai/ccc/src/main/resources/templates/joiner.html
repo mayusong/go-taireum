@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>一键加入区块链</title>
@@ -9,12 +9,20 @@
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 <body>
+<div id="joiner">
+    <h1>新成员加入区块链</h1>
+    <textarea v-model="genesisJson" placeholder="genesis.json"></textarea>
+    <input v-model="creator_account" placeholder="creator address">
+    <input v-model="creator_enode" placeholder="creator enode">
+    <input v-model="contract_address" placeholder="contract">
+    <button v-on:click="initMemberAllInOne">一键部署联盟节点</button>
+    <p>{{ JoinAllInOneResult }}</p>
 
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
 <script src="joiner.js"></script>
-
 </body>
 </html>
