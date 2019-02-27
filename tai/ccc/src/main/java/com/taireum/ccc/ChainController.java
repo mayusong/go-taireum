@@ -19,10 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.util.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -340,8 +339,8 @@ public class ChainController {
             }
 
             resultMap.put("status", "1");
-            resultMap.put("account", account);
-            resultMap.put("password", "0x" + password);
+            resultMap.put("account", "0x" +account);
+            resultMap.put("password", password);
 
 
             url = host + "/api/chain/initGenesis";
@@ -421,6 +420,72 @@ public class ChainController {
             e.printStackTrace();
         } finally {
             return JSON.toJSONString(resultMap);
+        }
+    }
+    @RequestMapping(value = "/api/chain/downConfig")
+    public String initAllInOne() {
+        //jar cvf config.jar enode.json contract.json genesis.json miner.json
+        String local_host = InetAddress.getLoopbackAddress().getHostAddress();
+        String local_host_port = environment.getProperty("local.server.port");
+        String host = "http://" + local_host + ":" + local_host_port;
+
+        {
+            File files = new File("files");
+            if (!files.exists()) {
+                files.mkdir();
+            }
+        }
+
+        CommandLine commandLine = CommandLine.parse("jar cvf ./files/config.zip enode.json contract.json genesis.json miner.json");
+        DaemonExecutor daemonExecutor = new DaemonExecutor();
+
+        try {
+            int result = daemonExecutor.execute(commandLine);
+            if (result == 0) {
+                return host + "/files/config.zip";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    @RequestMapping(value = "/files/config.zip")
+    public void getConfigJar(HttpServletRequest request, HttpServletResponse response) {
+        File file = new File("./files/config.zip");
+        if (file.exists()) {
+            response.setContentType("application/force-download");// 设置强制下载不打开
+            response.addHeader("Content-Disposition", "attachment;fileName=config.zip");// 设置文件名
+            byte[] buffer = new byte[1024];
+            FileInputStream fileInputStream = null;
+            BufferedInputStream bufferedInputStream = null;
+            try {
+                fileInputStream = new FileInputStream(file);
+                bufferedInputStream = new BufferedInputStream(fileInputStream);
+                OutputStream os = response.getOutputStream();
+                int i = bufferedInputStream.read(buffer);
+                while (i != -1) {
+                    os.write(buffer, 0, i);
+                    i = bufferedInputStream.read(buffer);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (bufferedInputStream != null) {
+                    try {
+                        bufferedInputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (fileInputStream != null) {
+                    try {
+                        fileInputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
     }
 
@@ -560,7 +625,5 @@ public class ChainController {
         } finally {
             return JSON.toJSONString(resultMap);
         }
-
-
     }
 }

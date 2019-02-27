@@ -17,7 +17,10 @@ let Creator = {
             });
         },
         downloadConfig: function () {
-            window.open("http://127.0.0.1:8080/miner.json")
+            let url = this.get_host() + "/api/chain/downConfig";
+            this.$http.get(url).then(res => {
+                window.open(res.bodyText);
+            });
         }
     },
     data: function () {
