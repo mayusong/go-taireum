@@ -26,7 +26,7 @@ public class CredentialsUtilTest {
 
     @Test
     public void getAllAccountAddress() {
-        String accounts = CredentialsUtil.getAllAccountAddress("tai_data_dir");
-        System.out.println(accounts);
+//        String accounts = CredentialsUtil.getAllAccountAddress("tai_data_dir");
+//        System.out.println(accounts);
     }
 }
